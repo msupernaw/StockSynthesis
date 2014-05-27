@@ -6,13 +6,14 @@
  */
 
 #include <cstdlib>
-
+#include "StockSynthesisModel.hpp"
 using namespace std;
 
 /*
  * 
  */
 int main(int argc, char** argv) {
+ss::StockSynthesisModel<double,double> ss;
 
     return 0;
 }
