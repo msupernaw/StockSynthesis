@@ -6409,15 +6409,2768 @@ namespace ss {
 
     template<class REAL_T, class EVAL_T = REAL_T>
     class StockSynthesisModel : public ss::ModelBase<REAL_T, EVAL_T> {
+        std::vector<int> integer_control_flags;
+        std::vector<REAL_T> double_control_flags;
+        EVAL_T dummy_parm;
+        std::vector<EVAL_T> MGparm;
+        std::valarray<std::valarray<EVAL_T> > MGparm_trend;
+        std::valarray<std::valarray<EVAL_T> > MGparm_block_val;
+        std::valarray<std::valarray<EVAL_T> > MGparm_dev;
+        std::valarray<std::valarray<EVAL_T> > MGparm_dev_rwalk;
+        std::vector<EVAL_T> L_inf;
+        std::vector<EVAL_T> Lmax_temp;
+        std::vector<EVAL_T> VBK;
+        std::vector<EVAL_T> Richards;
+        std::vector<EVAL_T> Lmin;
+        std::vector<EVAL_T> Lmin_last;
+        std::valarray<std::valarray<EVAL_T> > natMparms;
+        std::vector<EVAL_T> natM;
+        std::vector<EVAL_T> surv1;
+        std::vector<EVAL_T> surv2;
+        std::vector<EVAL_T> CVLmin;
+        std::vector<EVAL_T> CVLmax;
+        std::vector<EVAL_T> CV_const;
+        std::valarray<std::valarray<EVAL_T> > mgp_save;
+        std::vector<EVAL_T> mgp_adj;
+        std::valarray<std::valarray<EVAL_T> > Cohort_Growth;
+        std::vector<EVAL_T> Cohort_Lmin;
+        std::vector<EVAL_T> VBK_seas;
+        std::valarray<std::valarray<EVAL_T> > wtlen_seas;
+        std::vector<EVAL_T> wtlen_p;
+        std::vector<EVAL_T> wt_len;
+        std::valarray<std::valarray<EVAL_T> > wt_len2;
+        std::valarray<std::valarray<EVAL_T> > wt_len2_sq;
+        std::valarray<std::valarray<EVAL_T> > wt_len_low;
+        std::valarray<std::valarray<EVAL_T> > wt_len_fd;
+        std::vector<EVAL_T> mat_len;
+        std::vector<EVAL_T> fec_len;
+        std::vector<EVAL_T> mat_len_wt;
+        std::vector<EVAL_T> mat_age;
+        std::valarray<std::valarray<EVAL_T> > Hermaphro_val;
+        std::vector<EVAL_T> age_age;
+        std::vector<EVAL_T> age_err;
+        std::vector<EVAL_T> ALK;
+        std::valarray<std::valarray<EVAL_T> > exp_AL;
+        std::vector<EVAL_T> Sd_Size_within;
+        std::vector<EVAL_T> Sd_Size_between;
+        std::vector<EVAL_T> Ave_Size;
+        std::valarray<std::valarray<EVAL_T> > CV_G;
+        std::vector<EVAL_T> Save_Wt_Age;
+        std::vector<EVAL_T> Wt_Age_beg;
+        std::vector<EVAL_T> Wt_Age_mid;
+        std::vector<EVAL_T> migrrate;
+        std::vector<EVAL_T> recr_dist;
+        std::vector<EVAL_T> SR_parm;
+        EVAL_T two_sigmaRsq;
+        EVAL_T half_sigmaRsq;
+        EVAL_T sigmaR;
+        EVAL_T rho;
+        std::vector<EVAL_T> biasadj;
+        std::vector<EVAL_T> biasadj_full;
+        EVAL_T sd_offset_rec;
+        std::vector<EVAL_T> recdev_cycle_parm;
+        std::vector<EVAL_T> recdev_early;
+        std::vector<EVAL_T> recdev1;
+        std::vector<EVAL_T> recdev2;
+        std::vector<EVAL_T> Fcast_recruitments;
+        std::vector<EVAL_T> recdev;
+        std::vector<EVAL_T> Fcast_impl_error;
+        EVAL_T SPB_current;
+        EVAL_T SPB_vir_LH;
+        EVAL_T Recr_virgin;
+        EVAL_T SPB_virgin;
+        EVAL_T SPR_unf;
+        EVAL_T SPR_trial;
+        std::vector<EVAL_T> SPB_pop_gp;
+        std::vector<EVAL_T> SPB_yr;
+        std::vector<EVAL_T> MaleSPB;
+        std::valarray<std::valarray<EVAL_T> > SPB_equil_pop_gp;
+        std::valarray<std::valarray<EVAL_T> > MaleSPB_equil_pop_gp;
+        EVAL_T SPB_equil;
+        EVAL_T Recruits;
+        std::valarray<std::valarray<EVAL_T> > Recr;
+        std::vector<EVAL_T> exp_rec;
+        std::vector<EVAL_T> pred_rec;
+        std::vector<EVAL_T> use_rec;
+        std::valarray<std::valarray<EVAL_T> > Nmid;
+        std::valarray<std::valarray<EVAL_T> > Nsurv;
+        std::vector<EVAL_T> natage_temp;
+        std::vector<EVAL_T> agetemp;
+        std::vector<EVAL_T> Save_PopLen;
+        std::vector<EVAL_T> Save_PopAge;
+        EVAL_T ave_age;
+        std::vector<EVAL_T> init_F;
+        std::vector<EVAL_T> est_equ_catch;
+        std::vector<EVAL_T> natage;
+        std::vector<EVAL_T> catage;
+        std::vector<EVAL_T> equ_catage;
+        std::vector<EVAL_T> equ_numbers;
+        std::vector<EVAL_T> equ_Z;
+        std::valarray<std::valarray<EVAL_T> > catage_tot;
+        std::valarray<std::valarray<EVAL_T> > Hrate;
+        std::vector<EVAL_T> catch_fleet;
+        std::valarray<std::valarray<EVAL_T> > equ_catch_fleet;
+        std::valarray<std::valarray<EVAL_T> > fec;
+        std::valarray<std::valarray<EVAL_T> > virg_fec;
+        EVAL_T fish_bio;
+        EVAL_T fish_bio_r;
+        EVAL_T fish_bio_e;
+        EVAL_T fish_num_e;
+        EVAL_T fish_num;
+        EVAL_T fish_num_r;
+        EVAL_T vbio;
+        EVAL_T totbio;
+        EVAL_T smrybio;
+        EVAL_T smrynum;
+        EVAL_T harvest_rate;
+        EVAL_T maxpossF;
+        std::vector<EVAL_T> Get_EquilCalc;
+        std::vector<EVAL_T> Z_rate;
+        std::valarray<std::valarray<EVAL_T> > Zrate2;
+        std::vector<EVAL_T> F_rate;
+        std::vector<EVAL_T> Nmigr;
+        EVAL_T Nsurvive;
+        EVAL_T YPR_tgt_enc;
+        EVAL_T YPR_tgt_dead;
+        EVAL_T YPR_tgt_N_dead;
+        EVAL_T YPR_tgt_ret;
+        EVAL_T YPR_spr;
+        EVAL_T Vbio_spr;
+        EVAL_T Vbio1_spr;
+        EVAL_T SPR_actual;
+        EVAL_T YPR_Btgt_enc;
+        EVAL_T YPR_Btgt_dead;
+        EVAL_T YPR_Btgt_N_dead;
+        EVAL_T YPR_Btgt_ret;
+        EVAL_T YPR_Btgt;
+        EVAL_T Vbio_Btgt;
+        EVAL_T Vbio1_Btgt;
+        EVAL_T Btgt;
+        EVAL_T Btgttgt;
+        EVAL_T SPR_Btgt;
+        EVAL_T Btgt_Rec;
+        EVAL_T Bspr;
+        EVAL_T Bspr_rec;
+        EVAL_T YPR;
+        EVAL_T MSY;
+        EVAL_T Bmsy;
+        EVAL_T Recr_msy;
+        EVAL_T YPR_msy_enc;
+        EVAL_T YPR_msy_dead;
+        EVAL_T YPR_msy_N_dead;
+        EVAL_T YPR_msy_ret;
+        EVAL_T YPR_enc;
+        EVAL_T YPR_dead;
+        EVAL_T YPR_N_dead;
+        EVAL_T YPR_ret;
+        EVAL_T MSY_Fmult;
+        EVAL_T SPR_Fmult;
+        EVAL_T Btgt_Fmult;
+        EVAL_T caa;
+        EVAL_T Fmult;
+        EVAL_T Fcast_Fmult;
+        EVAL_T Fchange;
+        EVAL_T last_calc;
+        std::valarray<std::valarray<EVAL_T> > Fcast_RelF_Use;
+        std::valarray<std::valarray<EVAL_T> > Bmark_RelF_Use;
+        EVAL_T alpha;
+        EVAL_T beta;
+        EVAL_T MSY_SPR;
+        EVAL_T GenTime;
+        std::vector<EVAL_T> cumF;
+        std::vector<EVAL_T> maxF;
+        EVAL_T Yield;
+        EVAL_T Adj4010;
+        std::vector<EVAL_T> Q_parm;
+        std::valarray<std::valarray<EVAL_T> > log_q_cr;
+        std::valarray<std::valarray<EVAL_T> > q_cr;
+        std::valarray<std::valarray<EVAL_T> > se_cr_use;
+        std::valarray<std::valarray<EVAL_T> > exp_cr;
+        std::vector<EVAL_T> surv_like;
+        std::valarray<std::valarray<EVAL_T> > Q_dev_like;
+        std::vector<EVAL_T> disc_like;
+        std::vector<EVAL_T> mnwt_like;
+        std::valarray<std::valarray<EVAL_T> > exp_disc;
+        std::vector<EVAL_T> retain;
+        std::vector<EVAL_T> retain_M;
+        std::vector<EVAL_T> discmort;
+        std::vector<EVAL_T> discmort_M;
+        std::vector<EVAL_T> exp_mnwt;
+        std::valarray<std::valarray<EVAL_T> > Morphcomp_exp;
+        std::vector<EVAL_T> SzFreqTrans;
+        std::valarray<std::valarray<EVAL_T> > TG_alive;
+        std::valarray<std::valarray<EVAL_T> > TG_alive_temp;
+        std::vector<EVAL_T> TG_recap_exp;
+        std::vector<EVAL_T> TG_like1;
+        std::vector<EVAL_T> TG_like2;
+        EVAL_T overdisp;
+        std::vector<EVAL_T> TG_parm;
+        std::vector<EVAL_T> selparm;
+        std::valarray<std::valarray<EVAL_T> > selparm_trend;
+        std::valarray<std::valarray<EVAL_T> > selparm_block_val;
+        std::valarray<std::valarray<EVAL_T> > selparm_dev;
+        std::valarray<std::valarray<EVAL_T> > selparm_dev_rwalk;
+        std::vector<EVAL_T> sel_l;
+        std::vector<EVAL_T> sel_l_r;
+        std::vector<EVAL_T> discmort2;
+        std::vector<EVAL_T> sel_a;
+        std::vector<EVAL_T> sel;
+        std::vector<EVAL_T> fish_body_wt;
+        std::vector<EVAL_T> sel_al_1;
+        std::vector<EVAL_T> sel_al_2;
+        std::vector<EVAL_T> sel_al_3;
+        std::vector<EVAL_T> sel_al_4;
+        std::vector<EVAL_T> deadfish;
+        std::vector<EVAL_T> deadfish_B;
+        std::vector<EVAL_T> save_sel_fec;
+        std::vector<EVAL_T> Sel_for_tag;
+        std::vector<EVAL_T> TG_report;
+        std::vector<EVAL_T> TG_rep_decay;
+        std::vector<EVAL_T> save_sp_len;
+        std::vector<EVAL_T> exp_l;
+        std::valarray<std::valarray<EVAL_T> > neff_l;
+        std::vector<EVAL_T> tempvec_l;
+        std::vector<EVAL_T> exp_l_temp;
+        std::vector<EVAL_T> exp_l_temp_ret;
+        std::vector<EVAL_T> exp_l_temp_dat;
+        std::vector<EVAL_T> offset_l;
+        std::vector<EVAL_T> length_like;
+        std::valarray<std::valarray<EVAL_T> > SzFreq_exp;
+        std::vector<EVAL_T> SzFreq_like;
+        std::vector<EVAL_T> exp_a;
+        std::vector<EVAL_T> exp_a_temp;
+        std::vector<EVAL_T> tempvec;
+        std::valarray<std::valarray<EVAL_T> > neff_a;
+        std::vector<EVAL_T> offset_a;
+        std::vector<EVAL_T> age_like;
+        std::vector<EVAL_T> sizeage_like;
+        std::vector<EVAL_T> exp_ms;
+        std::vector<EVAL_T> exp_ms_sq;
+        EVAL_T Morphcomp_like;
+        EVAL_T equ_catch_like;
+        std::vector<EVAL_T> catch_like;
+        EVAL_T recr_like;
+        EVAL_T Fcast_recr_like;
+        EVAL_T parm_like;
+        EVAL_T parm_dev_like;
+        EVAL_T CrashPen;
+        EVAL_T SoftBoundPen;
+        EVAL_T Equ_penalty;
+        EVAL_T F_ballpark_like;
+        EVAL_T F_ballpark_lambda;
+        EVAL_T R1;
+        EVAL_T R1_exp;
+        EVAL_T t1;
+        EVAL_T t2;
+        EVAL_T temp;
+        EVAL_T temp1;
+        EVAL_T temp2;
+        EVAL_T temp3;
+        EVAL_T temp4;
+        EVAL_T join1;
+        EVAL_T join2;
+        EVAL_T join3;
+        EVAL_T upselex;
+        EVAL_T downselex;
+        EVAL_T peak;
+        EVAL_T peak2;
+        EVAL_T point1;
+        EVAL_T point2;
+        EVAL_T point3;
+        EVAL_T point4;
+        EVAL_T timing;
+        EVAL_T equ_Recr;
+        EVAL_T equ_F_std;
+        std::valarray<std::valarray<EVAL_T> > smry;
+        std::valarray<std::valarray<EVAL_T> > env_data;
+        std::valarray<std::valarray<EVAL_T> > TG_save;
+        std::vector<EVAL_T> SPB_std;
+        std::vector<EVAL_T> recr_std;
+        std::vector<EVAL_T> SPR_std;
+        std::vector<EVAL_T> F_std;
+        std::vector<EVAL_T> depletion;
+        std::vector<EVAL_T> Mgmt_quant;
+        std::vector<EVAL_T> Extra_Std;
+        std::vector<EVAL_T> MGparm_Like;
+        std::vector<EVAL_T> init_F_Like;
+        std::vector<EVAL_T> Q_parm_Like;
+        std::vector<EVAL_T> selparm_Like;
+        std::vector<EVAL_T> SR_parm_Like;
+        std::vector<EVAL_T> recdev_cycle_Like;
+        std::vector<EVAL_T> TG_parm_Like;
+        EVAL_T prior_function_value;
+        EVAL_T likelihood_function_value;
+        EVAL_T last_objfun;
+        std::vector<EVAL_T> phase_output;
+
+
     public:
+
+        void get_MGsetup(void) {
+        }
+
+        void get_growth1(void) {
+        }
+
+        void get_growth2(void) {
+        }
+
+        void get_natmort(void) {
+        }
+
+        void get_recr_distribution(void) {
+        }
+
+        void get_wtlen(void) {
+        }
+
+        void get_migration(void) {
+        }
+
+        void get_saveGparm(void) {
+        }
+
+        void get_selectivity(void) {
+        }
+
+        void get_age_selectivity(void) {
+        }
+
+        void get_size_selectivity(void) {
+        }
+
+        void get_initial_conditions(void) {
+        }
+
+        void get_time_series(void) {
+        }
+
+        void evaluate_the_objective_function(void) {
+        }
+
+        void Process_STDquant(void) {
+        }
+
+        EVAL_T Check_Parm(const REAL_T& Pmin, const REAL_T& Pmax, const REAL_T& jitter, const EVAL_T& Pval) {
+        }
+
+        void Report_Parm(const int NParm, const int AC, const int Activ, const int PH, const REAL_T& Pmin, const REAL_T& Pmax, const int PR_T, const REAL_T& PR, const REAL_T& CV, const REAL_T& RD, const EVAL_T& Pval, const EVAL_T& Like) {
+        }
+
+        EVAL_T Get_Prior(const int T, const REAL_T& Pmin, const REAL_T& Pmax, const REAL_T& Pr, const REAL_T& Psd, const EVAL_T& Pval) {
+        }
+
+        void Do_Equil_Calc(void) {
+        }
+
+        void Make_AgeLength_Key(void) {
+        }
+
+        void Make_FishSelex(void) {
+        }
+
+        void get_posteriors(void) {
+        }
+
+        void Get_Benchmarks(void) {
+        }
+
+        void Get_Forecast(void) {
+        }
+
+        void write_summaryoutput(void) {
+        }
+
+        void write_rebuilder_output(void) {
+        }
+
+        void write_nudata(void) {
+        }
+
+        void write_nucontrol(void) {
+        }
+
+        void write_bigoutput(void) {
+        }
+
+        void write_Bzero_output(void) {
+        }
+
+        EVAL_T Join_Fxn(const EVAL_T& MinPoss, const EVAL_T& MaxPoss, const EVAL_T& Inflec, const EVAL_T& Xvar, const EVAL_T& Y1, const EVAL_T& Y2) {
+        }
+
+        EVAL_T Spawn_Recr(const EVAL_T& SPB_current) {
+        }
+
+        std::vector<EVAL_T> Equil_Spawn_Recr_Fxn(const EVAL_T& SPB_current) {
+        }
+
+        void get_age_age(const int Keynum) {
+        }
 
         void Evaluate(EVAL_T &f) {
 
         }
+
+
+
+
+        //getters and setters
+
+        std::vector<EVAL_T> GetALK() const {
+            return ALK;
+        }
+
+        void SetALK(std::vector<EVAL_T> ALK) {
+            this->ALK = ALK;
+        }
+
+        EVAL_T GetAdj4010() const {
+            return Adj4010;
+        }
+
+        void SetAdj4010(EVAL_T Adj4010) {
+            this->Adj4010 = Adj4010;
+        }
+
+        std::vector<EVAL_T> GetAve_Size() const {
+            return Ave_Size;
+        }
+
+        void SetAve_Size(std::vector<EVAL_T> Ave_Size) {
+            this->Ave_Size = Ave_Size;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetBmark_RelF_Use() const {
+            return Bmark_RelF_Use;
+        }
+
+        void SetBmark_RelF_Use(std::valarray<std::valarray<EVAL_T> > Bmark_RelF_Use) {
+            this->Bmark_RelF_Use = Bmark_RelF_Use;
+        }
+
+        EVAL_T GetBmsy() const {
+            return Bmsy;
+        }
+
+        void SetBmsy(EVAL_T Bmsy) {
+            this->Bmsy = Bmsy;
+        }
+
+        EVAL_T GetBspr() const {
+            return Bspr;
+        }
+
+        void SetBspr(EVAL_T Bspr) {
+            this->Bspr = Bspr;
+        }
+
+        EVAL_T GetBspr_rec() const {
+            return Bspr_rec;
+        }
+
+        void SetBspr_rec(EVAL_T Bspr_rec) {
+            this->Bspr_rec = Bspr_rec;
+        }
+
+        EVAL_T GetBtgt() const {
+            return Btgt;
+        }
+
+        void SetBtgt(EVAL_T Btgt) {
+            this->Btgt = Btgt;
+        }
+
+        EVAL_T GetBtgt_Fmult() const {
+            return Btgt_Fmult;
+        }
+
+        void SetBtgt_Fmult(EVAL_T Btgt_Fmult) {
+            this->Btgt_Fmult = Btgt_Fmult;
+        }
+
+        EVAL_T GetBtgt_Rec() const {
+            return Btgt_Rec;
+        }
+
+        void SetBtgt_Rec(EVAL_T Btgt_Rec) {
+            this->Btgt_Rec = Btgt_Rec;
+        }
+
+        EVAL_T GetBtgttgt() const {
+            return Btgttgt;
+        }
+
+        void SetBtgttgt(EVAL_T Btgttgt) {
+            this->Btgttgt = Btgttgt;
+        }
+
+        std::vector<EVAL_T> GetCVLmax() const {
+            return CVLmax;
+        }
+
+        void SetCVLmax(std::vector<EVAL_T> CVLmax) {
+            this->CVLmax = CVLmax;
+        }
+
+        std::vector<EVAL_T> GetCVLmin() const {
+            return CVLmin;
+        }
+
+        void SetCVLmin(std::vector<EVAL_T> CVLmin) {
+            this->CVLmin = CVLmin;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetCV_G() const {
+            return CV_G;
+        }
+
+        void SetCV_G(std::valarray<std::valarray<EVAL_T> > CV_G) {
+            this->CV_G = CV_G;
+        }
+
+        std::vector<EVAL_T> GetCV_const() const {
+            return CV_const;
+        }
+
+        void SetCV_const(std::vector<EVAL_T> CV_const) {
+            this->CV_const = CV_const;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetCohort_Growth() const {
+            return Cohort_Growth;
+        }
+
+        void SetCohort_Growth(std::valarray<std::valarray<EVAL_T> > Cohort_Growth) {
+            this->Cohort_Growth = Cohort_Growth;
+        }
+
+        std::vector<EVAL_T> GetCohort_Lmin() const {
+            return Cohort_Lmin;
+        }
+
+        void SetCohort_Lmin(std::vector<EVAL_T> Cohort_Lmin) {
+            this->Cohort_Lmin = Cohort_Lmin;
+        }
+
+        EVAL_T GetCrashPen() const {
+            return CrashPen;
+        }
+
+        void SetCrashPen(EVAL_T CrashPen) {
+            this->CrashPen = CrashPen;
+        }
+
+        EVAL_T GetEqu_penalty() const {
+            return Equ_penalty;
+        }
+
+        void SetEqu_penalty(EVAL_T Equ_penalty) {
+            this->Equ_penalty = Equ_penalty;
+        }
+
+        std::vector<EVAL_T> GetExtra_Std() const {
+            return Extra_Std;
+        }
+
+        void SetExtra_Std(std::vector<EVAL_T> Extra_Std) {
+            this->Extra_Std = Extra_Std;
+        }
+
+        EVAL_T GetF_ballpark_lambda() const {
+            return F_ballpark_lambda;
+        }
+
+        void SetF_ballpark_lambda(EVAL_T F_ballpark_lambda) {
+            this->F_ballpark_lambda = F_ballpark_lambda;
+        }
+
+        EVAL_T GetF_ballpark_like() const {
+            return F_ballpark_like;
+        }
+
+        void SetF_ballpark_like(EVAL_T F_ballpark_like) {
+            this->F_ballpark_like = F_ballpark_like;
+        }
+
+        std::vector<EVAL_T> GetF_rate() const {
+            return F_rate;
+        }
+
+        void SetF_rate(std::vector<EVAL_T> F_rate) {
+            this->F_rate = F_rate;
+        }
+
+        std::vector<EVAL_T> GetF_std() const {
+            return F_std;
+        }
+
+        void SetF_std(std::vector<EVAL_T> F_std) {
+            this->F_std = F_std;
+        }
+
+        EVAL_T GetFcast_Fmult() const {
+            return Fcast_Fmult;
+        }
+
+        void SetFcast_Fmult(EVAL_T Fcast_Fmult) {
+            this->Fcast_Fmult = Fcast_Fmult;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetFcast_RelF_Use() const {
+            return Fcast_RelF_Use;
+        }
+
+        void SetFcast_RelF_Use(std::valarray<std::valarray<EVAL_T> > Fcast_RelF_Use) {
+            this->Fcast_RelF_Use = Fcast_RelF_Use;
+        }
+
+        std::vector<EVAL_T> GetFcast_impl_error() const {
+            return Fcast_impl_error;
+        }
+
+        void SetFcast_impl_error(std::vector<EVAL_T> Fcast_impl_error) {
+            this->Fcast_impl_error = Fcast_impl_error;
+        }
+
+        EVAL_T GetFcast_recr_like() const {
+            return Fcast_recr_like;
+        }
+
+        void SetFcast_recr_like(EVAL_T Fcast_recr_like) {
+            this->Fcast_recr_like = Fcast_recr_like;
+        }
+
+        std::vector<EVAL_T> GetFcast_recruitments() const {
+            return Fcast_recruitments;
+        }
+
+        void SetFcast_recruitments(std::vector<EVAL_T> Fcast_recruitments) {
+            this->Fcast_recruitments = Fcast_recruitments;
+        }
+
+        EVAL_T GetFchange() const {
+            return Fchange;
+        }
+
+        void SetFchange(EVAL_T Fchange) {
+            this->Fchange = Fchange;
+        }
+
+        EVAL_T GetFmult() const {
+            return Fmult;
+        }
+
+        void SetFmult(EVAL_T Fmult) {
+            this->Fmult = Fmult;
+        }
+
+        EVAL_T GetGenTime() const {
+            return GenTime;
+        }
+
+        void SetGenTime(EVAL_T GenTime) {
+            this->GenTime = GenTime;
+        }
+
+        std::vector<EVAL_T> GetGet_EquilCalc() const {
+            return Get_EquilCalc;
+        }
+
+        void SetGet_EquilCalc(std::vector<EVAL_T> Get_EquilCalc) {
+            this->Get_EquilCalc = Get_EquilCalc;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetHermaphro_val() const {
+            return Hermaphro_val;
+        }
+
+        void SetHermaphro_val(std::valarray<std::valarray<EVAL_T> > Hermaphro_val) {
+            this->Hermaphro_val = Hermaphro_val;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetHrate() const {
+            return Hrate;
+        }
+
+        void SetHrate(std::valarray<std::valarray<EVAL_T> > Hrate) {
+            this->Hrate = Hrate;
+        }
+
+        std::vector<EVAL_T> GetL_inf() const {
+            return L_inf;
+        }
+
+        void SetL_inf(std::vector<EVAL_T> L_inf) {
+            this->L_inf = L_inf;
+        }
+
+        std::vector<EVAL_T> GetLmax_temp() const {
+            return Lmax_temp;
+        }
+
+        void SetLmax_temp(std::vector<EVAL_T> Lmax_temp) {
+            this->Lmax_temp = Lmax_temp;
+        }
+
+        std::vector<EVAL_T> GetLmin() const {
+            return Lmin;
+        }
+
+        void SetLmin(std::vector<EVAL_T> Lmin) {
+            this->Lmin = Lmin;
+        }
+
+        std::vector<EVAL_T> GetLmin_last() const {
+            return Lmin_last;
+        }
+
+        void SetLmin_last(std::vector<EVAL_T> Lmin_last) {
+            this->Lmin_last = Lmin_last;
+        }
+
+        std::vector<EVAL_T> GetMGparm() const {
+            return MGparm;
+        }
+
+        void SetMGparm(std::vector<EVAL_T> MGparm) {
+            this->MGparm = MGparm;
+        }
+
+        std::vector<EVAL_T> GetMGparm_Like() const {
+            return MGparm_Like;
+        }
+
+        void SetMGparm_Like(std::vector<EVAL_T> MGparm_Like) {
+            this->MGparm_Like = MGparm_Like;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMGparm_block_val() const {
+            return MGparm_block_val;
+        }
+
+        void SetMGparm_block_val(std::valarray<std::valarray<EVAL_T> > MGparm_block_val) {
+            this->MGparm_block_val = MGparm_block_val;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMGparm_dev() const {
+            return MGparm_dev;
+        }
+
+        void SetMGparm_dev(std::valarray<std::valarray<EVAL_T> > MGparm_dev) {
+            this->MGparm_dev = MGparm_dev;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMGparm_dev_rwalk() const {
+            return MGparm_dev_rwalk;
+        }
+
+        void SetMGparm_dev_rwalk(std::valarray<std::valarray<EVAL_T> > MGparm_dev_rwalk) {
+            this->MGparm_dev_rwalk = MGparm_dev_rwalk;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMGparm_trend() const {
+            return MGparm_trend;
+        }
+
+        void SetMGparm_trend(std::valarray<std::valarray<EVAL_T> > MGparm_trend) {
+            this->MGparm_trend = MGparm_trend;
+        }
+
+        EVAL_T GetMSY() const {
+            return MSY;
+        }
+
+        void SetMSY(EVAL_T MSY) {
+            this->MSY = MSY;
+        }
+
+        EVAL_T GetMSY_Fmult() const {
+            return MSY_Fmult;
+        }
+
+        void SetMSY_Fmult(EVAL_T MSY_Fmult) {
+            this->MSY_Fmult = MSY_Fmult;
+        }
+
+        EVAL_T GetMSY_SPR() const {
+            return MSY_SPR;
+        }
+
+        void SetMSY_SPR(EVAL_T MSY_SPR) {
+            this->MSY_SPR = MSY_SPR;
+        }
+
+        std::vector<EVAL_T> GetMaleSPB() const {
+            return MaleSPB;
+        }
+
+        void SetMaleSPB(std::vector<EVAL_T> MaleSPB) {
+            this->MaleSPB = MaleSPB;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMaleSPB_equil_pop_gp() const {
+            return MaleSPB_equil_pop_gp;
+        }
+
+        void SetMaleSPB_equil_pop_gp(std::valarray<std::valarray<EVAL_T> > MaleSPB_equil_pop_gp) {
+            this->MaleSPB_equil_pop_gp = MaleSPB_equil_pop_gp;
+        }
+
+        std::vector<EVAL_T> GetMgmt_quant() const {
+            return Mgmt_quant;
+        }
+
+        void SetMgmt_quant(std::vector<EVAL_T> Mgmt_quant) {
+            this->Mgmt_quant = Mgmt_quant;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMorphcomp_exp() const {
+            return Morphcomp_exp;
+        }
+
+        void SetMorphcomp_exp(std::valarray<std::valarray<EVAL_T> > Morphcomp_exp) {
+            this->Morphcomp_exp = Morphcomp_exp;
+        }
+
+        EVAL_T GetMorphcomp_like() const {
+            return Morphcomp_like;
+        }
+
+        void SetMorphcomp_like(EVAL_T Morphcomp_like) {
+            this->Morphcomp_like = Morphcomp_like;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetNmid() const {
+            return Nmid;
+        }
+
+        void SetNmid(std::valarray<std::valarray<EVAL_T> > Nmid) {
+            this->Nmid = Nmid;
+        }
+
+        std::vector<EVAL_T> GetNmigr() const {
+            return Nmigr;
+        }
+
+        void SetNmigr(std::vector<EVAL_T> Nmigr) {
+            this->Nmigr = Nmigr;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetNsurv() const {
+            return Nsurv;
+        }
+
+        void SetNsurv(std::valarray<std::valarray<EVAL_T> > Nsurv) {
+            this->Nsurv = Nsurv;
+        }
+
+        EVAL_T GetNsurvive() const {
+            return Nsurvive;
+        }
+
+        void SetNsurvive(EVAL_T Nsurvive) {
+            this->Nsurvive = Nsurvive;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetQ_dev_like() const {
+            return Q_dev_like;
+        }
+
+        void SetQ_dev_like(std::valarray<std::valarray<EVAL_T> > Q_dev_like) {
+            this->Q_dev_like = Q_dev_like;
+        }
+
+        std::vector<EVAL_T> GetQ_parm() const {
+            return Q_parm;
+        }
+
+        void SetQ_parm(std::vector<EVAL_T> Q_parm) {
+            this->Q_parm = Q_parm;
+        }
+
+        std::vector<EVAL_T> GetQ_parm_Like() const {
+            return Q_parm_Like;
+        }
+
+        void SetQ_parm_Like(std::vector<EVAL_T> Q_parm_Like) {
+            this->Q_parm_Like = Q_parm_Like;
+        }
+
+        EVAL_T GetR1() const {
+            return R1;
+        }
+
+        void SetR1(EVAL_T R1) {
+            this->R1 = R1;
+        }
+
+        EVAL_T GetR1_exp() const {
+            return R1_exp;
+        }
+
+        void SetR1_exp(EVAL_T R1_exp) {
+            this->R1_exp = R1_exp;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetRecr() const {
+            return Recr;
+        }
+
+        void SetRecr(std::valarray<std::valarray<EVAL_T> > Recr) {
+            this->Recr = Recr;
+        }
+
+        EVAL_T GetRecr_msy() const {
+            return Recr_msy;
+        }
+
+        void SetRecr_msy(EVAL_T Recr_msy) {
+            this->Recr_msy = Recr_msy;
+        }
+
+        EVAL_T GetRecr_virgin() const {
+            return Recr_virgin;
+        }
+
+        void SetRecr_virgin(EVAL_T Recr_virgin) {
+            this->Recr_virgin = Recr_virgin;
+        }
+
+        EVAL_T GetRecruits() const {
+            return Recruits;
+        }
+
+        void SetRecruits(EVAL_T Recruits) {
+            this->Recruits = Recruits;
+        }
+
+        std::vector<EVAL_T> GetRichards() const {
+            return Richards;
+        }
+
+        void SetRichards(std::vector<EVAL_T> Richards) {
+            this->Richards = Richards;
+        }
+
+        EVAL_T GetSPB_current() const {
+            return SPB_current;
+        }
+
+        void SetSPB_current(EVAL_T SPB_current) {
+            this->SPB_current = SPB_current;
+        }
+
+        EVAL_T GetSPB_equil() const {
+            return SPB_equil;
+        }
+
+        void SetSPB_equil(EVAL_T SPB_equil) {
+            this->SPB_equil = SPB_equil;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSPB_equil_pop_gp() const {
+            return SPB_equil_pop_gp;
+        }
+
+        void SetSPB_equil_pop_gp(std::valarray<std::valarray<EVAL_T> > SPB_equil_pop_gp) {
+            this->SPB_equil_pop_gp = SPB_equil_pop_gp;
+        }
+
+        std::vector<EVAL_T> GetSPB_pop_gp() const {
+            return SPB_pop_gp;
+        }
+
+        void SetSPB_pop_gp(std::vector<EVAL_T> SPB_pop_gp) {
+            this->SPB_pop_gp = SPB_pop_gp;
+        }
+
+        std::vector<EVAL_T> GetSPB_std() const {
+            return SPB_std;
+        }
+
+        void SetSPB_std(std::vector<EVAL_T> SPB_std) {
+            this->SPB_std = SPB_std;
+        }
+
+        EVAL_T GetSPB_vir_LH() const {
+            return SPB_vir_LH;
+        }
+
+        void SetSPB_vir_LH(EVAL_T SPB_vir_LH) {
+            this->SPB_vir_LH = SPB_vir_LH;
+        }
+
+        EVAL_T GetSPB_virgin() const {
+            return SPB_virgin;
+        }
+
+        void SetSPB_virgin(EVAL_T SPB_virgin) {
+            this->SPB_virgin = SPB_virgin;
+        }
+
+        std::vector<EVAL_T> GetSPB_yr() const {
+            return SPB_yr;
+        }
+
+        void SetSPB_yr(std::vector<EVAL_T> SPB_yr) {
+            this->SPB_yr = SPB_yr;
+        }
+
+        EVAL_T GetSPR_Btgt() const {
+            return SPR_Btgt;
+        }
+
+        void SetSPR_Btgt(EVAL_T SPR_Btgt) {
+            this->SPR_Btgt = SPR_Btgt;
+        }
+
+        EVAL_T GetSPR_Fmult() const {
+            return SPR_Fmult;
+        }
+
+        void SetSPR_Fmult(EVAL_T SPR_Fmult) {
+            this->SPR_Fmult = SPR_Fmult;
+        }
+
+        EVAL_T GetSPR_actual() const {
+            return SPR_actual;
+        }
+
+        void SetSPR_actual(EVAL_T SPR_actual) {
+            this->SPR_actual = SPR_actual;
+        }
+
+        std::vector<EVAL_T> GetSPR_std() const {
+            return SPR_std;
+        }
+
+        void SetSPR_std(std::vector<EVAL_T> SPR_std) {
+            this->SPR_std = SPR_std;
+        }
+
+        EVAL_T GetSPR_trial() const {
+            return SPR_trial;
+        }
+
+        void SetSPR_trial(EVAL_T SPR_trial) {
+            this->SPR_trial = SPR_trial;
+        }
+
+        EVAL_T GetSPR_unf() const {
+            return SPR_unf;
+        }
+
+        void SetSPR_unf(EVAL_T SPR_unf) {
+            this->SPR_unf = SPR_unf;
+        }
+
+        std::vector<EVAL_T> GetSR_parm() const {
+            return SR_parm;
+        }
+
+        void SetSR_parm(std::vector<EVAL_T> SR_parm) {
+            this->SR_parm = SR_parm;
+        }
+
+        std::vector<EVAL_T> GetSR_parm_Like() const {
+            return SR_parm_Like;
+        }
+
+        void SetSR_parm_Like(std::vector<EVAL_T> SR_parm_Like) {
+            this->SR_parm_Like = SR_parm_Like;
+        }
+
+        std::vector<EVAL_T> GetSave_PopAge() const {
+            return Save_PopAge;
+        }
+
+        void SetSave_PopAge(std::vector<EVAL_T> Save_PopAge) {
+            this->Save_PopAge = Save_PopAge;
+        }
+
+        std::vector<EVAL_T> GetSave_PopLen() const {
+            return Save_PopLen;
+        }
+
+        void SetSave_PopLen(std::vector<EVAL_T> Save_PopLen) {
+            this->Save_PopLen = Save_PopLen;
+        }
+
+        std::vector<EVAL_T> GetSave_Wt_Age() const {
+            return Save_Wt_Age;
+        }
+
+        void SetSave_Wt_Age(std::vector<EVAL_T> Save_Wt_Age) {
+            this->Save_Wt_Age = Save_Wt_Age;
+        }
+
+        std::vector<EVAL_T> GetSd_Size_between() const {
+            return Sd_Size_between;
+        }
+
+        void SetSd_Size_between(std::vector<EVAL_T> Sd_Size_between) {
+            this->Sd_Size_between = Sd_Size_between;
+        }
+
+        std::vector<EVAL_T> GetSd_Size_within() const {
+            return Sd_Size_within;
+        }
+
+        void SetSd_Size_within(std::vector<EVAL_T> Sd_Size_within) {
+            this->Sd_Size_within = Sd_Size_within;
+        }
+
+        std::vector<EVAL_T> GetSel_for_tag() const {
+            return Sel_for_tag;
+        }
+
+        void SetSel_for_tag(std::vector<EVAL_T> Sel_for_tag) {
+            this->Sel_for_tag = Sel_for_tag;
+        }
+
+        EVAL_T GetSoftBoundPen() const {
+            return SoftBoundPen;
+        }
+
+        void SetSoftBoundPen(EVAL_T SoftBoundPen) {
+            this->SoftBoundPen = SoftBoundPen;
+        }
+
+        std::vector<EVAL_T> GetSzFreqTrans() const {
+            return SzFreqTrans;
+        }
+
+        void SetSzFreqTrans(std::vector<EVAL_T> SzFreqTrans) {
+            this->SzFreqTrans = SzFreqTrans;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSzFreq_exp() const {
+            return SzFreq_exp;
+        }
+
+        void SetSzFreq_exp(std::valarray<std::valarray<EVAL_T> > SzFreq_exp) {
+            this->SzFreq_exp = SzFreq_exp;
+        }
+
+        std::vector<EVAL_T> GetSzFreq_like() const {
+            return SzFreq_like;
+        }
+
+        void SetSzFreq_like(std::vector<EVAL_T> SzFreq_like) {
+            this->SzFreq_like = SzFreq_like;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetTG_alive() const {
+            return TG_alive;
+        }
+
+        void SetTG_alive(std::valarray<std::valarray<EVAL_T> > TG_alive) {
+            this->TG_alive = TG_alive;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetTG_alive_temp() const {
+            return TG_alive_temp;
+        }
+
+        void SetTG_alive_temp(std::valarray<std::valarray<EVAL_T> > TG_alive_temp) {
+            this->TG_alive_temp = TG_alive_temp;
+        }
+
+        std::vector<EVAL_T> GetTG_like1() const {
+            return TG_like1;
+        }
+
+        void SetTG_like1(std::vector<EVAL_T> TG_like1) {
+            this->TG_like1 = TG_like1;
+        }
+
+        std::vector<EVAL_T> GetTG_like2() const {
+            return TG_like2;
+        }
+
+        void SetTG_like2(std::vector<EVAL_T> TG_like2) {
+            this->TG_like2 = TG_like2;
+        }
+
+        std::vector<EVAL_T> GetTG_parm() const {
+            return TG_parm;
+        }
+
+        void SetTG_parm(std::vector<EVAL_T> TG_parm) {
+            this->TG_parm = TG_parm;
+        }
+
+        std::vector<EVAL_T> GetTG_parm_Like() const {
+            return TG_parm_Like;
+        }
+
+        void SetTG_parm_Like(std::vector<EVAL_T> TG_parm_Like) {
+            this->TG_parm_Like = TG_parm_Like;
+        }
+
+        std::vector<EVAL_T> GetTG_recap_exp() const {
+            return TG_recap_exp;
+        }
+
+        void SetTG_recap_exp(std::vector<EVAL_T> TG_recap_exp) {
+            this->TG_recap_exp = TG_recap_exp;
+        }
+
+        std::vector<EVAL_T> GetTG_rep_decay() const {
+            return TG_rep_decay;
+        }
+
+        void SetTG_rep_decay(std::vector<EVAL_T> TG_rep_decay) {
+            this->TG_rep_decay = TG_rep_decay;
+        }
+
+        std::vector<EVAL_T> GetTG_report() const {
+            return TG_report;
+        }
+
+        void SetTG_report(std::vector<EVAL_T> TG_report) {
+            this->TG_report = TG_report;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetTG_save() const {
+            return TG_save;
+        }
+
+        void SetTG_save(std::valarray<std::valarray<EVAL_T> > TG_save) {
+            this->TG_save = TG_save;
+        }
+
+        std::vector<EVAL_T> GetVBK() const {
+            return VBK;
+        }
+
+        void SetVBK(std::vector<EVAL_T> VBK) {
+            this->VBK = VBK;
+        }
+
+        std::vector<EVAL_T> GetVBK_seas() const {
+            return VBK_seas;
+        }
+
+        void SetVBK_seas(std::vector<EVAL_T> VBK_seas) {
+            this->VBK_seas = VBK_seas;
+        }
+
+        EVAL_T GetVbio1_Btgt() const {
+            return Vbio1_Btgt;
+        }
+
+        void SetVbio1_Btgt(EVAL_T Vbio1_Btgt) {
+            this->Vbio1_Btgt = Vbio1_Btgt;
+        }
+
+        EVAL_T GetVbio1_spr() const {
+            return Vbio1_spr;
+        }
+
+        void SetVbio1_spr(EVAL_T Vbio1_spr) {
+            this->Vbio1_spr = Vbio1_spr;
+        }
+
+        EVAL_T GetVbio_Btgt() const {
+            return Vbio_Btgt;
+        }
+
+        void SetVbio_Btgt(EVAL_T Vbio_Btgt) {
+            this->Vbio_Btgt = Vbio_Btgt;
+        }
+
+        EVAL_T GetVbio_spr() const {
+            return Vbio_spr;
+        }
+
+        void SetVbio_spr(EVAL_T Vbio_spr) {
+            this->Vbio_spr = Vbio_spr;
+        }
+
+        std::vector<EVAL_T> GetWt_Age_beg() const {
+            return Wt_Age_beg;
+        }
+
+        void SetWt_Age_beg(std::vector<EVAL_T> Wt_Age_beg) {
+            this->Wt_Age_beg = Wt_Age_beg;
+        }
+
+        std::vector<EVAL_T> GetWt_Age_mid() const {
+            return Wt_Age_mid;
+        }
+
+        void SetWt_Age_mid(std::vector<EVAL_T> Wt_Age_mid) {
+            this->Wt_Age_mid = Wt_Age_mid;
+        }
+
+        EVAL_T GetYPR() const {
+            return YPR;
+        }
+
+        void SetYPR(EVAL_T YPR) {
+            this->YPR = YPR;
+        }
+
+        EVAL_T GetYPR_Btgt() const {
+            return YPR_Btgt;
+        }
+
+        void SetYPR_Btgt(EVAL_T YPR_Btgt) {
+            this->YPR_Btgt = YPR_Btgt;
+        }
+
+        EVAL_T GetYPR_Btgt_N_dead() const {
+            return YPR_Btgt_N_dead;
+        }
+
+        void SetYPR_Btgt_N_dead(EVAL_T YPR_Btgt_N_dead) {
+            this->YPR_Btgt_N_dead = YPR_Btgt_N_dead;
+        }
+
+        EVAL_T GetYPR_Btgt_dead() const {
+            return YPR_Btgt_dead;
+        }
+
+        void SetYPR_Btgt_dead(EVAL_T YPR_Btgt_dead) {
+            this->YPR_Btgt_dead = YPR_Btgt_dead;
+        }
+
+        EVAL_T GetYPR_Btgt_enc() const {
+            return YPR_Btgt_enc;
+        }
+
+        void SetYPR_Btgt_enc(EVAL_T YPR_Btgt_enc) {
+            this->YPR_Btgt_enc = YPR_Btgt_enc;
+        }
+
+        EVAL_T GetYPR_Btgt_ret() const {
+            return YPR_Btgt_ret;
+        }
+
+        void SetYPR_Btgt_ret(EVAL_T YPR_Btgt_ret) {
+            this->YPR_Btgt_ret = YPR_Btgt_ret;
+        }
+
+        EVAL_T GetYPR_N_dead() const {
+            return YPR_N_dead;
+        }
+
+        void SetYPR_N_dead(EVAL_T YPR_N_dead) {
+            this->YPR_N_dead = YPR_N_dead;
+        }
+
+        EVAL_T GetYPR_dead() const {
+            return YPR_dead;
+        }
+
+        void SetYPR_dead(EVAL_T YPR_dead) {
+            this->YPR_dead = YPR_dead;
+        }
+
+        EVAL_T GetYPR_enc() const {
+            return YPR_enc;
+        }
+
+        void SetYPR_enc(EVAL_T YPR_enc) {
+            this->YPR_enc = YPR_enc;
+        }
+
+        EVAL_T GetYPR_msy_N_dead() const {
+            return YPR_msy_N_dead;
+        }
+
+        void SetYPR_msy_N_dead(EVAL_T YPR_msy_N_dead) {
+            this->YPR_msy_N_dead = YPR_msy_N_dead;
+        }
+
+        EVAL_T GetYPR_msy_dead() const {
+            return YPR_msy_dead;
+        }
+
+        void SetYPR_msy_dead(EVAL_T YPR_msy_dead) {
+            this->YPR_msy_dead = YPR_msy_dead;
+        }
+
+        EVAL_T GetYPR_msy_enc() const {
+            return YPR_msy_enc;
+        }
+
+        void SetYPR_msy_enc(EVAL_T YPR_msy_enc) {
+            this->YPR_msy_enc = YPR_msy_enc;
+        }
+
+        EVAL_T GetYPR_msy_ret() const {
+            return YPR_msy_ret;
+        }
+
+        void SetYPR_msy_ret(EVAL_T YPR_msy_ret) {
+            this->YPR_msy_ret = YPR_msy_ret;
+        }
+
+        EVAL_T GetYPR_ret() const {
+            return YPR_ret;
+        }
+
+        void SetYPR_ret(EVAL_T YPR_ret) {
+            this->YPR_ret = YPR_ret;
+        }
+
+        EVAL_T GetYPR_spr() const {
+            return YPR_spr;
+        }
+
+        void SetYPR_spr(EVAL_T YPR_spr) {
+            this->YPR_spr = YPR_spr;
+        }
+
+        EVAL_T GetYPR_tgt_N_dead() const {
+            return YPR_tgt_N_dead;
+        }
+
+        void SetYPR_tgt_N_dead(EVAL_T YPR_tgt_N_dead) {
+            this->YPR_tgt_N_dead = YPR_tgt_N_dead;
+        }
+
+        EVAL_T GetYPR_tgt_dead() const {
+            return YPR_tgt_dead;
+        }
+
+        void SetYPR_tgt_dead(EVAL_T YPR_tgt_dead) {
+            this->YPR_tgt_dead = YPR_tgt_dead;
+        }
+
+        EVAL_T GetYPR_tgt_enc() const {
+            return YPR_tgt_enc;
+        }
+
+        void SetYPR_tgt_enc(EVAL_T YPR_tgt_enc) {
+            this->YPR_tgt_enc = YPR_tgt_enc;
+        }
+
+        EVAL_T GetYPR_tgt_ret() const {
+            return YPR_tgt_ret;
+        }
+
+        void SetYPR_tgt_ret(EVAL_T YPR_tgt_ret) {
+            this->YPR_tgt_ret = YPR_tgt_ret;
+        }
+
+        EVAL_T GetYield() const {
+            return Yield;
+        }
+
+        void SetYield(EVAL_T Yield) {
+            this->Yield = Yield;
+        }
+
+        std::vector<EVAL_T> GetZ_rate() const {
+            return Z_rate;
+        }
+
+        void SetZ_rate(std::vector<EVAL_T> Z_rate) {
+            this->Z_rate = Z_rate;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetZrate2() const {
+            return Zrate2;
+        }
+
+        void SetZrate2(std::valarray<std::valarray<EVAL_T> > Zrate2) {
+            this->Zrate2 = Zrate2;
+        }
+
+        std::vector<EVAL_T> GetAge_age() const {
+            return age_age;
+        }
+
+        void SetAge_age(std::vector<EVAL_T> age_age) {
+            this->age_age = age_age;
+        }
+
+        std::vector<EVAL_T> GetAge_err() const {
+            return age_err;
+        }
+
+        void SetAge_err(std::vector<EVAL_T> age_err) {
+            this->age_err = age_err;
+        }
+
+        std::vector<EVAL_T> GetAge_like() const {
+            return age_like;
+        }
+
+        void SetAge_like(std::vector<EVAL_T> age_like) {
+            this->age_like = age_like;
+        }
+
+        std::vector<EVAL_T> GetAgetemp() const {
+            return agetemp;
+        }
+
+        void SetAgetemp(std::vector<EVAL_T> agetemp) {
+            this->agetemp = agetemp;
+        }
+
+        EVAL_T GetAlpha() const {
+            return alpha;
+        }
+
+        void SetAlpha(EVAL_T alpha) {
+            this->alpha = alpha;
+        }
+
+        EVAL_T GetAve_age() const {
+            return ave_age;
+        }
+
+        void SetAve_age(EVAL_T ave_age) {
+            this->ave_age = ave_age;
+        }
+
+        EVAL_T GetBeta() const {
+            return beta;
+        }
+
+        void SetBeta(EVAL_T beta) {
+            this->beta = beta;
+        }
+
+        std::vector<EVAL_T> GetBiasadj() const {
+            return biasadj;
+        }
+
+        void SetBiasadj(std::vector<EVAL_T> biasadj) {
+            this->biasadj = biasadj;
+        }
+
+        std::vector<EVAL_T> GetBiasadj_full() const {
+            return biasadj_full;
+        }
+
+        void SetBiasadj_full(std::vector<EVAL_T> biasadj_full) {
+            this->biasadj_full = biasadj_full;
+        }
+
+        EVAL_T GetCaa() const {
+            return caa;
+        }
+
+        void SetCaa(EVAL_T caa) {
+            this->caa = caa;
+        }
+
+        std::vector<EVAL_T> GetCatage() const {
+            return catage;
+        }
+
+        void SetCatage(std::vector<EVAL_T> catage) {
+            this->catage = catage;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetCatage_tot() const {
+            return catage_tot;
+        }
+
+        void SetCatage_tot(std::valarray<std::valarray<EVAL_T> > catage_tot) {
+            this->catage_tot = catage_tot;
+        }
+
+        std::vector<EVAL_T> GetCatch_fleet() const {
+            return catch_fleet;
+        }
+
+        void SetCatch_fleet(std::vector<EVAL_T> catch_fleet) {
+            this->catch_fleet = catch_fleet;
+        }
+
+        std::vector<EVAL_T> GetCatch_like() const {
+            return catch_like;
+        }
+
+        void SetCatch_like(std::vector<EVAL_T> catch_like) {
+            this->catch_like = catch_like;
+        }
+
+        std::vector<EVAL_T> GetCumF() const {
+            return cumF;
+        }
+
+        void SetCumF(std::vector<EVAL_T> cumF) {
+            this->cumF = cumF;
+        }
+
+        std::vector<EVAL_T> GetDeadfish() const {
+            return deadfish;
+        }
+
+        void SetDeadfish(std::vector<EVAL_T> deadfish) {
+            this->deadfish = deadfish;
+        }
+
+        std::vector<EVAL_T> GetDeadfish_B() const {
+            return deadfish_B;
+        }
+
+        void SetDeadfish_B(std::vector<EVAL_T> deadfish_B) {
+            this->deadfish_B = deadfish_B;
+        }
+
+        std::vector<EVAL_T> GetDepletion() const {
+            return depletion;
+        }
+
+        void SetDepletion(std::vector<EVAL_T> depletion) {
+            this->depletion = depletion;
+        }
+
+        std::vector<EVAL_T> GetDisc_like() const {
+            return disc_like;
+        }
+
+        void SetDisc_like(std::vector<EVAL_T> disc_like) {
+            this->disc_like = disc_like;
+        }
+
+        std::vector<EVAL_T> GetDiscmort() const {
+            return discmort;
+        }
+
+        void SetDiscmort(std::vector<EVAL_T> discmort) {
+            this->discmort = discmort;
+        }
+
+        std::vector<EVAL_T> GetDiscmort2() const {
+            return discmort2;
+        }
+
+        void SetDiscmort2(std::vector<EVAL_T> discmort2) {
+            this->discmort2 = discmort2;
+        }
+
+        std::vector<EVAL_T> GetDiscmort_M() const {
+            return discmort_M;
+        }
+
+        void SetDiscmort_M(std::vector<EVAL_T> discmort_M) {
+            this->discmort_M = discmort_M;
+        }
+
+        std::vector<REAL_T> GetDouble_control_flags() const {
+            return double_control_flags;
+        }
+
+        void SetDouble_control_flags(std::vector<REAL_T> double_control_flags) {
+            this->double_control_flags = double_control_flags;
+        }
+
+        EVAL_T GetDownselex() const {
+            return downselex;
+        }
+
+        void SetDownselex(EVAL_T downselex) {
+            this->downselex = downselex;
+        }
+
+        EVAL_T GetDummy_parm() const {
+            return dummy_parm;
+        }
+
+        void SetDummy_parm(EVAL_T dummy_parm) {
+            this->dummy_parm = dummy_parm;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetEnv_data() const {
+            return env_data;
+        }
+
+        void SetEnv_data(std::valarray<std::valarray<EVAL_T> > env_data) {
+            this->env_data = env_data;
+        }
+
+        EVAL_T GetEqu_F_std() const {
+            return equ_F_std;
+        }
+
+        void SetEqu_F_std(EVAL_T equ_F_std) {
+            this->equ_F_std = equ_F_std;
+        }
+
+        EVAL_T GetEqu_Recr() const {
+            return equ_Recr;
+        }
+
+        void SetEqu_Recr(EVAL_T equ_Recr) {
+            this->equ_Recr = equ_Recr;
+        }
+
+        std::vector<EVAL_T> GetEqu_Z() const {
+            return equ_Z;
+        }
+
+        void SetEqu_Z(std::vector<EVAL_T> equ_Z) {
+            this->equ_Z = equ_Z;
+        }
+
+        std::vector<EVAL_T> GetEqu_catage() const {
+            return equ_catage;
+        }
+
+        void SetEqu_catage(std::vector<EVAL_T> equ_catage) {
+            this->equ_catage = equ_catage;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetEqu_catch_fleet() const {
+            return equ_catch_fleet;
+        }
+
+        void SetEqu_catch_fleet(std::valarray<std::valarray<EVAL_T> > equ_catch_fleet) {
+            this->equ_catch_fleet = equ_catch_fleet;
+        }
+
+        EVAL_T GetEqu_catch_like() const {
+            return equ_catch_like;
+        }
+
+        void SetEqu_catch_like(EVAL_T equ_catch_like) {
+            this->equ_catch_like = equ_catch_like;
+        }
+
+        std::vector<EVAL_T> GetEqu_numbers() const {
+            return equ_numbers;
+        }
+
+        void SetEqu_numbers(std::vector<EVAL_T> equ_numbers) {
+            this->equ_numbers = equ_numbers;
+        }
+
+        std::vector<EVAL_T> GetEst_equ_catch() const {
+            return est_equ_catch;
+        }
+
+        void SetEst_equ_catch(std::vector<EVAL_T> est_equ_catch) {
+            this->est_equ_catch = est_equ_catch;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetExp_AL() const {
+            return exp_AL;
+        }
+
+        void SetExp_AL(std::valarray<std::valarray<EVAL_T> > exp_AL) {
+            this->exp_AL = exp_AL;
+        }
+
+        std::vector<EVAL_T> GetExp_a() const {
+            return exp_a;
+        }
+
+        void SetExp_a(std::vector<EVAL_T> exp_a) {
+            this->exp_a = exp_a;
+        }
+
+        std::vector<EVAL_T> GetExp_a_temp() const {
+            return exp_a_temp;
+        }
+
+        void SetExp_a_temp(std::vector<EVAL_T> exp_a_temp) {
+            this->exp_a_temp = exp_a_temp;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetExp_cr() const {
+            return exp_cr;
+        }
+
+        void SetExp_cr(std::valarray<std::valarray<EVAL_T> > exp_cr) {
+            this->exp_cr = exp_cr;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetExp_disc() const {
+            return exp_disc;
+        }
+
+        void SetExp_disc(std::valarray<std::valarray<EVAL_T> > exp_disc) {
+            this->exp_disc = exp_disc;
+        }
+
+        std::vector<EVAL_T> GetExp_l() const {
+            return exp_l;
+        }
+
+        void SetExp_l(std::vector<EVAL_T> exp_l) {
+            this->exp_l = exp_l;
+        }
+
+        std::vector<EVAL_T> GetExp_l_temp() const {
+            return exp_l_temp;
+        }
+
+        void SetExp_l_temp(std::vector<EVAL_T> exp_l_temp) {
+            this->exp_l_temp = exp_l_temp;
+        }
+
+        std::vector<EVAL_T> GetExp_l_temp_dat() const {
+            return exp_l_temp_dat;
+        }
+
+        void SetExp_l_temp_dat(std::vector<EVAL_T> exp_l_temp_dat) {
+            this->exp_l_temp_dat = exp_l_temp_dat;
+        }
+
+        std::vector<EVAL_T> GetExp_l_temp_ret() const {
+            return exp_l_temp_ret;
+        }
+
+        void SetExp_l_temp_ret(std::vector<EVAL_T> exp_l_temp_ret) {
+            this->exp_l_temp_ret = exp_l_temp_ret;
+        }
+
+        std::vector<EVAL_T> GetExp_mnwt() const {
+            return exp_mnwt;
+        }
+
+        void SetExp_mnwt(std::vector<EVAL_T> exp_mnwt) {
+            this->exp_mnwt = exp_mnwt;
+        }
+
+        std::vector<EVAL_T> GetExp_ms() const {
+            return exp_ms;
+        }
+
+        void SetExp_ms(std::vector<EVAL_T> exp_ms) {
+            this->exp_ms = exp_ms;
+        }
+
+        std::vector<EVAL_T> GetExp_ms_sq() const {
+            return exp_ms_sq;
+        }
+
+        void SetExp_ms_sq(std::vector<EVAL_T> exp_ms_sq) {
+            this->exp_ms_sq = exp_ms_sq;
+        }
+
+        std::vector<EVAL_T> GetExp_rec() const {
+            return exp_rec;
+        }
+
+        void SetExp_rec(std::vector<EVAL_T> exp_rec) {
+            this->exp_rec = exp_rec;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetFec() const {
+            return fec;
+        }
+
+        void SetFec(std::valarray<std::valarray<EVAL_T> > fec) {
+            this->fec = fec;
+        }
+
+        std::vector<EVAL_T> GetFec_len() const {
+            return fec_len;
+        }
+
+        void SetFec_len(std::vector<EVAL_T> fec_len) {
+            this->fec_len = fec_len;
+        }
+
+        EVAL_T GetFish_bio() const {
+            return fish_bio;
+        }
+
+        void SetFish_bio(EVAL_T fish_bio) {
+            this->fish_bio = fish_bio;
+        }
+
+        EVAL_T GetFish_bio_e() const {
+            return fish_bio_e;
+        }
+
+        void SetFish_bio_e(EVAL_T fish_bio_e) {
+            this->fish_bio_e = fish_bio_e;
+        }
+
+        EVAL_T GetFish_bio_r() const {
+            return fish_bio_r;
+        }
+
+        void SetFish_bio_r(EVAL_T fish_bio_r) {
+            this->fish_bio_r = fish_bio_r;
+        }
+
+        std::vector<EVAL_T> GetFish_body_wt() const {
+            return fish_body_wt;
+        }
+
+        void SetFish_body_wt(std::vector<EVAL_T> fish_body_wt) {
+            this->fish_body_wt = fish_body_wt;
+        }
+
+        EVAL_T GetFish_num() const {
+            return fish_num;
+        }
+
+        void SetFish_num(EVAL_T fish_num) {
+            this->fish_num = fish_num;
+        }
+
+        EVAL_T GetFish_num_e() const {
+            return fish_num_e;
+        }
+
+        void SetFish_num_e(EVAL_T fish_num_e) {
+            this->fish_num_e = fish_num_e;
+        }
+
+        EVAL_T GetFish_num_r() const {
+            return fish_num_r;
+        }
+
+        void SetFish_num_r(EVAL_T fish_num_r) {
+            this->fish_num_r = fish_num_r;
+        }
+
+        EVAL_T GetHalf_sigmaRsq() const {
+            return half_sigmaRsq;
+        }
+
+        void SetHalf_sigmaRsq(EVAL_T half_sigmaRsq) {
+            this->half_sigmaRsq = half_sigmaRsq;
+        }
+
+        EVAL_T GetHarvest_rate() const {
+            return harvest_rate;
+        }
+
+        void SetHarvest_rate(EVAL_T harvest_rate) {
+            this->harvest_rate = harvest_rate;
+        }
+
+        std::vector<EVAL_T> GetInit_F() const {
+            return init_F;
+        }
+
+        void SetInit_F(std::vector<EVAL_T> init_F) {
+            this->init_F = init_F;
+        }
+
+        std::vector<EVAL_T> GetInit_F_Like() const {
+            return init_F_Like;
+        }
+
+        void SetInit_F_Like(std::vector<EVAL_T> init_F_Like) {
+            this->init_F_Like = init_F_Like;
+        }
+
+        std::vector<int> GetInteger_control_flags() const {
+            return integer_control_flags;
+        }
+
+        void SetInteger_control_flags(std::vector<int> integer_control_flags) {
+            this->integer_control_flags = integer_control_flags;
+        }
+
+        EVAL_T GetJoin1() const {
+            return join1;
+        }
+
+        void SetJoin1(EVAL_T join1) {
+            this->join1 = join1;
+        }
+
+        EVAL_T GetJoin2() const {
+            return join2;
+        }
+
+        void SetJoin2(EVAL_T join2) {
+            this->join2 = join2;
+        }
+
+        EVAL_T GetJoin3() const {
+            return join3;
+        }
+
+        void SetJoin3(EVAL_T join3) {
+            this->join3 = join3;
+        }
+
+        EVAL_T GetLast_calc() const {
+            return last_calc;
+        }
+
+        void SetLast_calc(EVAL_T last_calc) {
+            this->last_calc = last_calc;
+        }
+
+        EVAL_T GetLast_objfun() const {
+            return last_objfun;
+        }
+
+        void SetLast_objfun(EVAL_T last_objfun) {
+            this->last_objfun = last_objfun;
+        }
+
+        std::vector<EVAL_T> GetLength_like() const {
+            return length_like;
+        }
+
+        void SetLength_like(std::vector<EVAL_T> length_like) {
+            this->length_like = length_like;
+        }
+
+        EVAL_T GetLikelihood_function_value() const {
+            return likelihood_function_value;
+        }
+
+        void SetLikelihood_function_value(EVAL_T likelihood_function_value) {
+            this->likelihood_function_value = likelihood_function_value;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetLog_q_cr() const {
+            return log_q_cr;
+        }
+
+        void SetLog_q_cr(std::valarray<std::valarray<EVAL_T> > log_q_cr) {
+            this->log_q_cr = log_q_cr;
+        }
+
+        std::vector<EVAL_T> GetMat_age() const {
+            return mat_age;
+        }
+
+        void SetMat_age(std::vector<EVAL_T> mat_age) {
+            this->mat_age = mat_age;
+        }
+
+        std::vector<EVAL_T> GetMat_len() const {
+            return mat_len;
+        }
+
+        void SetMat_len(std::vector<EVAL_T> mat_len) {
+            this->mat_len = mat_len;
+        }
+
+        std::vector<EVAL_T> GetMat_len_wt() const {
+            return mat_len_wt;
+        }
+
+        void SetMat_len_wt(std::vector<EVAL_T> mat_len_wt) {
+            this->mat_len_wt = mat_len_wt;
+        }
+
+        std::vector<EVAL_T> GetMaxF() const {
+            return maxF;
+        }
+
+        void SetMaxF(std::vector<EVAL_T> maxF) {
+            this->maxF = maxF;
+        }
+
+        EVAL_T GetMaxpossF() const {
+            return maxpossF;
+        }
+
+        void SetMaxpossF(EVAL_T maxpossF) {
+            this->maxpossF = maxpossF;
+        }
+
+        std::vector<EVAL_T> GetMgp_adj() const {
+            return mgp_adj;
+        }
+
+        void SetMgp_adj(std::vector<EVAL_T> mgp_adj) {
+            this->mgp_adj = mgp_adj;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetMgp_save() const {
+            return mgp_save;
+        }
+
+        void SetMgp_save(std::valarray<std::valarray<EVAL_T> > mgp_save) {
+            this->mgp_save = mgp_save;
+        }
+
+        std::vector<EVAL_T> GetMigrrate() const {
+            return migrrate;
+        }
+
+        void SetMigrrate(std::vector<EVAL_T> migrrate) {
+            this->migrrate = migrrate;
+        }
+
+        std::vector<EVAL_T> GetMnwt_like() const {
+            return mnwt_like;
+        }
+
+        void SetMnwt_like(std::vector<EVAL_T> mnwt_like) {
+            this->mnwt_like = mnwt_like;
+        }
+
+        std::vector<EVAL_T> GetNatM() const {
+            return natM;
+        }
+
+        void SetNatM(std::vector<EVAL_T> natM) {
+            this->natM = natM;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetNatMparms() const {
+            return natMparms;
+        }
+
+        void SetNatMparms(std::valarray<std::valarray<EVAL_T> > natMparms) {
+            this->natMparms = natMparms;
+        }
+
+        std::vector<EVAL_T> GetNatage() const {
+            return natage;
+        }
+
+        void SetNatage(std::vector<EVAL_T> natage) {
+            this->natage = natage;
+        }
+
+        std::vector<EVAL_T> GetNatage_temp() const {
+            return natage_temp;
+        }
+
+        void SetNatage_temp(std::vector<EVAL_T> natage_temp) {
+            this->natage_temp = natage_temp;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetNeff_a() const {
+            return neff_a;
+        }
+
+        void SetNeff_a(std::valarray<std::valarray<EVAL_T> > neff_a) {
+            this->neff_a = neff_a;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetNeff_l() const {
+            return neff_l;
+        }
+
+        void SetNeff_l(std::valarray<std::valarray<EVAL_T> > neff_l) {
+            this->neff_l = neff_l;
+        }
+
+        std::vector<EVAL_T> GetOffset_a() const {
+            return offset_a;
+        }
+
+        void SetOffset_a(std::vector<EVAL_T> offset_a) {
+            this->offset_a = offset_a;
+        }
+
+        std::vector<EVAL_T> GetOffset_l() const {
+            return offset_l;
+        }
+
+        void SetOffset_l(std::vector<EVAL_T> offset_l) {
+            this->offset_l = offset_l;
+        }
+
+        EVAL_T GetOverdisp() const {
+            return overdisp;
+        }
+
+        void SetOverdisp(EVAL_T overdisp) {
+            this->overdisp = overdisp;
+        }
+
+        EVAL_T GetParm_dev_like() const {
+            return parm_dev_like;
+        }
+
+        void SetParm_dev_like(EVAL_T parm_dev_like) {
+            this->parm_dev_like = parm_dev_like;
+        }
+
+        EVAL_T GetParm_like() const {
+            return parm_like;
+        }
+
+        void SetParm_like(EVAL_T parm_like) {
+            this->parm_like = parm_like;
+        }
+
+        EVAL_T GetPeak() const {
+            return peak;
+        }
+
+        void SetPeak(EVAL_T peak) {
+            this->peak = peak;
+        }
+
+        EVAL_T GetPeak2() const {
+            return peak2;
+        }
+
+        void SetPeak2(EVAL_T peak2) {
+            this->peak2 = peak2;
+        }
+
+        std::vector<EVAL_T> GetPhase_output() const {
+            return phase_output;
+        }
+
+        void SetPhase_output(std::vector<EVAL_T> phase_output) {
+            this->phase_output = phase_output;
+        }
+
+        EVAL_T GetPoint1() const {
+            return point1;
+        }
+
+        void SetPoint1(EVAL_T point1) {
+            this->point1 = point1;
+        }
+
+        EVAL_T GetPoint2() const {
+            return point2;
+        }
+
+        void SetPoint2(EVAL_T point2) {
+            this->point2 = point2;
+        }
+
+        EVAL_T GetPoint3() const {
+            return point3;
+        }
+
+        void SetPoint3(EVAL_T point3) {
+            this->point3 = point3;
+        }
+
+        EVAL_T GetPoint4() const {
+            return point4;
+        }
+
+        void SetPoint4(EVAL_T point4) {
+            this->point4 = point4;
+        }
+
+        std::vector<EVAL_T> GetPred_rec() const {
+            return pred_rec;
+        }
+
+        void SetPred_rec(std::vector<EVAL_T> pred_rec) {
+            this->pred_rec = pred_rec;
+        }
+
+        EVAL_T GetPrior_function_value() const {
+            return prior_function_value;
+        }
+
+        void SetPrior_function_value(EVAL_T prior_function_value) {
+            this->prior_function_value = prior_function_value;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetQ_cr() const {
+            return q_cr;
+        }
+
+        void SetQ_cr(std::valarray<std::valarray<EVAL_T> > q_cr) {
+            this->q_cr = q_cr;
+        }
+
+        std::vector<EVAL_T> GetRecdev() const {
+            return recdev;
+        }
+
+        void SetRecdev(std::vector<EVAL_T> recdev) {
+            this->recdev = recdev;
+        }
+
+        std::vector<EVAL_T> GetRecdev1() const {
+            return recdev1;
+        }
+
+        void SetRecdev1(std::vector<EVAL_T> recdev1) {
+            this->recdev1 = recdev1;
+        }
+
+        std::vector<EVAL_T> GetRecdev2() const {
+            return recdev2;
+        }
+
+        void SetRecdev2(std::vector<EVAL_T> recdev2) {
+            this->recdev2 = recdev2;
+        }
+
+        std::vector<EVAL_T> GetRecdev_cycle_Like() const {
+            return recdev_cycle_Like;
+        }
+
+        void SetRecdev_cycle_Like(std::vector<EVAL_T> recdev_cycle_Like) {
+            this->recdev_cycle_Like = recdev_cycle_Like;
+        }
+
+        std::vector<EVAL_T> GetRecdev_cycle_parm() const {
+            return recdev_cycle_parm;
+        }
+
+        void SetRecdev_cycle_parm(std::vector<EVAL_T> recdev_cycle_parm) {
+            this->recdev_cycle_parm = recdev_cycle_parm;
+        }
+
+        std::vector<EVAL_T> GetRecdev_early() const {
+            return recdev_early;
+        }
+
+        void SetRecdev_early(std::vector<EVAL_T> recdev_early) {
+            this->recdev_early = recdev_early;
+        }
+
+        std::vector<EVAL_T> GetRecr_dist() const {
+            return recr_dist;
+        }
+
+        void SetRecr_dist(std::vector<EVAL_T> recr_dist) {
+            this->recr_dist = recr_dist;
+        }
+
+        EVAL_T GetRecr_like() const {
+            return recr_like;
+        }
+
+        void SetRecr_like(EVAL_T recr_like) {
+            this->recr_like = recr_like;
+        }
+
+        std::vector<EVAL_T> GetRecr_std() const {
+            return recr_std;
+        }
+
+        void SetRecr_std(std::vector<EVAL_T> recr_std) {
+            this->recr_std = recr_std;
+        }
+
+        std::vector<EVAL_T> GetRetain() const {
+            return retain;
+        }
+
+        void SetRetain(std::vector<EVAL_T> retain) {
+            this->retain = retain;
+        }
+
+        std::vector<EVAL_T> GetRetain_M() const {
+            return retain_M;
+        }
+
+        void SetRetain_M(std::vector<EVAL_T> retain_M) {
+            this->retain_M = retain_M;
+        }
+
+        EVAL_T GetRho() const {
+            return rho;
+        }
+
+        void SetRho(EVAL_T rho) {
+            this->rho = rho;
+        }
+
+        std::vector<EVAL_T> GetSave_sel_fec() const {
+            return save_sel_fec;
+        }
+
+        void SetSave_sel_fec(std::vector<EVAL_T> save_sel_fec) {
+            this->save_sel_fec = save_sel_fec;
+        }
+
+        std::vector<EVAL_T> GetSave_sp_len() const {
+            return save_sp_len;
+        }
+
+        void SetSave_sp_len(std::vector<EVAL_T> save_sp_len) {
+            this->save_sp_len = save_sp_len;
+        }
+
+        EVAL_T GetSd_offset_rec() const {
+            return sd_offset_rec;
+        }
+
+        void SetSd_offset_rec(EVAL_T sd_offset_rec) {
+            this->sd_offset_rec = sd_offset_rec;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSe_cr_use() const {
+            return se_cr_use;
+        }
+
+        void SetSe_cr_use(std::valarray<std::valarray<EVAL_T> > se_cr_use) {
+            this->se_cr_use = se_cr_use;
+        }
+
+        std::vector<EVAL_T> GetSel() const {
+            return sel;
+        }
+
+        void SetSel(std::vector<EVAL_T> sel) {
+            this->sel = sel;
+        }
+
+        std::vector<EVAL_T> GetSel_a() const {
+            return sel_a;
+        }
+
+        void SetSel_a(std::vector<EVAL_T> sel_a) {
+            this->sel_a = sel_a;
+        }
+
+        std::vector<EVAL_T> GetSel_al_1() const {
+            return sel_al_1;
+        }
+
+        void SetSel_al_1(std::vector<EVAL_T> sel_al_1) {
+            this->sel_al_1 = sel_al_1;
+        }
+
+        std::vector<EVAL_T> GetSel_al_2() const {
+            return sel_al_2;
+        }
+
+        void SetSel_al_2(std::vector<EVAL_T> sel_al_2) {
+            this->sel_al_2 = sel_al_2;
+        }
+
+        std::vector<EVAL_T> GetSel_al_3() const {
+            return sel_al_3;
+        }
+
+        void SetSel_al_3(std::vector<EVAL_T> sel_al_3) {
+            this->sel_al_3 = sel_al_3;
+        }
+
+        std::vector<EVAL_T> GetSel_al_4() const {
+            return sel_al_4;
+        }
+
+        void SetSel_al_4(std::vector<EVAL_T> sel_al_4) {
+            this->sel_al_4 = sel_al_4;
+        }
+
+        std::vector<EVAL_T> GetSel_l() const {
+            return sel_l;
+        }
+
+        void SetSel_l(std::vector<EVAL_T> sel_l) {
+            this->sel_l = sel_l;
+        }
+
+        std::vector<EVAL_T> GetSel_l_r() const {
+            return sel_l_r;
+        }
+
+        void SetSel_l_r(std::vector<EVAL_T> sel_l_r) {
+            this->sel_l_r = sel_l_r;
+        }
+
+        std::vector<EVAL_T> GetSelparm() const {
+            return selparm;
+        }
+
+        void SetSelparm(std::vector<EVAL_T> selparm) {
+            this->selparm = selparm;
+        }
+
+        std::vector<EVAL_T> GetSelparm_Like() const {
+            return selparm_Like;
+        }
+
+        void SetSelparm_Like(std::vector<EVAL_T> selparm_Like) {
+            this->selparm_Like = selparm_Like;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSelparm_block_val() const {
+            return selparm_block_val;
+        }
+
+        void SetSelparm_block_val(std::valarray<std::valarray<EVAL_T> > selparm_block_val) {
+            this->selparm_block_val = selparm_block_val;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSelparm_dev() const {
+            return selparm_dev;
+        }
+
+        void SetSelparm_dev(std::valarray<std::valarray<EVAL_T> > selparm_dev) {
+            this->selparm_dev = selparm_dev;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSelparm_dev_rwalk() const {
+            return selparm_dev_rwalk;
+        }
+
+        void SetSelparm_dev_rwalk(std::valarray<std::valarray<EVAL_T> > selparm_dev_rwalk) {
+            this->selparm_dev_rwalk = selparm_dev_rwalk;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSelparm_trend() const {
+            return selparm_trend;
+        }
+
+        void SetSelparm_trend(std::valarray<std::valarray<EVAL_T> > selparm_trend) {
+            this->selparm_trend = selparm_trend;
+        }
+
+        EVAL_T GetSigmaR() const {
+            return sigmaR;
+        }
+
+        void SetSigmaR(EVAL_T sigmaR) {
+            this->sigmaR = sigmaR;
+        }
+
+        std::vector<EVAL_T> GetSizeage_like() const {
+            return sizeage_like;
+        }
+
+        void SetSizeage_like(std::vector<EVAL_T> sizeage_like) {
+            this->sizeage_like = sizeage_like;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetSmry() const {
+            return smry;
+        }
+
+        void SetSmry(std::valarray<std::valarray<EVAL_T> > smry) {
+            this->smry = smry;
+        }
+
+        EVAL_T GetSmrybio() const {
+            return smrybio;
+        }
+
+        void SetSmrybio(EVAL_T smrybio) {
+            this->smrybio = smrybio;
+        }
+
+        EVAL_T GetSmrynum() const {
+            return smrynum;
+        }
+
+        void SetSmrynum(EVAL_T smrynum) {
+            this->smrynum = smrynum;
+        }
+
+        std::vector<EVAL_T> GetSurv1() const {
+            return surv1;
+        }
+
+        void SetSurv1(std::vector<EVAL_T> surv1) {
+            this->surv1 = surv1;
+        }
+
+        std::vector<EVAL_T> GetSurv2() const {
+            return surv2;
+        }
+
+        void SetSurv2(std::vector<EVAL_T> surv2) {
+            this->surv2 = surv2;
+        }
+
+        std::vector<EVAL_T> GetSurv_like() const {
+            return surv_like;
+        }
+
+        void SetSurv_like(std::vector<EVAL_T> surv_like) {
+            this->surv_like = surv_like;
+        }
+
+        EVAL_T GetT1() const {
+            return t1;
+        }
+
+        void SetT1(EVAL_T t1) {
+            this->t1 = t1;
+        }
+
+        EVAL_T GetT2() const {
+            return t2;
+        }
+
+        void SetT2(EVAL_T t2) {
+            this->t2 = t2;
+        }
+
+        EVAL_T GetTemp() const {
+            return temp;
+        }
+
+        void SetTemp(EVAL_T temp) {
+            this->temp = temp;
+        }
+
+        EVAL_T GetTemp1() const {
+            return temp1;
+        }
+
+        void SetTemp1(EVAL_T temp1) {
+            this->temp1 = temp1;
+        }
+
+        EVAL_T GetTemp2() const {
+            return temp2;
+        }
+
+        void SetTemp2(EVAL_T temp2) {
+            this->temp2 = temp2;
+        }
+
+        EVAL_T GetTemp3() const {
+            return temp3;
+        }
+
+        void SetTemp3(EVAL_T temp3) {
+            this->temp3 = temp3;
+        }
+
+        EVAL_T GetTemp4() const {
+            return temp4;
+        }
+
+        void SetTemp4(EVAL_T temp4) {
+            this->temp4 = temp4;
+        }
+
+        std::vector<EVAL_T> GetTempvec() const {
+            return tempvec;
+        }
+
+        void SetTempvec(std::vector<EVAL_T> tempvec) {
+            this->tempvec = tempvec;
+        }
+
+        std::vector<EVAL_T> GetTempvec_l() const {
+            return tempvec_l;
+        }
+
+        void SetTempvec_l(std::vector<EVAL_T> tempvec_l) {
+            this->tempvec_l = tempvec_l;
+        }
+
+        EVAL_T GetTiming() const {
+            return timing;
+        }
+
+        void SetTiming(EVAL_T timing) {
+            this->timing = timing;
+        }
+
+        EVAL_T GetTotbio() const {
+            return totbio;
+        }
+
+        void SetTotbio(EVAL_T totbio) {
+            this->totbio = totbio;
+        }
+
+        EVAL_T GetTwo_sigmaRsq() const {
+            return two_sigmaRsq;
+        }
+
+        void SetTwo_sigmaRsq(EVAL_T two_sigmaRsq) {
+            this->two_sigmaRsq = two_sigmaRsq;
+        }
+
+        EVAL_T GetUpselex() const {
+            return upselex;
+        }
+
+        void SetUpselex(EVAL_T upselex) {
+            this->upselex = upselex;
+        }
+
+        std::vector<EVAL_T> GetUse_rec() const {
+            return use_rec;
+        }
+
+        void SetUse_rec(std::vector<EVAL_T> use_rec) {
+            this->use_rec = use_rec;
+        }
+
+        EVAL_T GetVbio() const {
+            return vbio;
+        }
+
+        void SetVbio(EVAL_T vbio) {
+            this->vbio = vbio;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetVirg_fec() const {
+            return virg_fec;
+        }
+
+        void SetVirg_fec(std::valarray<std::valarray<EVAL_T> > virg_fec) {
+            this->virg_fec = virg_fec;
+        }
+
+        std::vector<EVAL_T> GetWt_len() const {
+            return wt_len;
+        }
+
+        void SetWt_len(std::vector<EVAL_T> wt_len) {
+            this->wt_len = wt_len;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetWt_len2() const {
+            return wt_len2;
+        }
+
+        void SetWt_len2(std::valarray<std::valarray<EVAL_T> > wt_len2) {
+            this->wt_len2 = wt_len2;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetWt_len2_sq() const {
+            return wt_len2_sq;
+        }
+
+        void SetWt_len2_sq(std::valarray<std::valarray<EVAL_T> > wt_len2_sq) {
+            this->wt_len2_sq = wt_len2_sq;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetWt_len_fd() const {
+            return wt_len_fd;
+        }
+
+        void SetWt_len_fd(std::valarray<std::valarray<EVAL_T> > wt_len_fd) {
+            this->wt_len_fd = wt_len_fd;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetWt_len_low() const {
+            return wt_len_low;
+        }
+
+        void SetWt_len_low(std::valarray<std::valarray<EVAL_T> > wt_len_low) {
+            this->wt_len_low = wt_len_low;
+        }
+
+        std::vector<EVAL_T> GetWtlen_p() const {
+            return wtlen_p;
+        }
+
+        void SetWtlen_p(std::vector<EVAL_T> wtlen_p) {
+            this->wtlen_p = wtlen_p;
+        }
+
+        std::valarray<std::valarray<EVAL_T> > GetWtlen_seas() const {
+            return wtlen_seas;
+        }
+
+        void SetWtlen_seas(std::valarray<std::valarray<EVAL_T> > wtlen_seas) {
+            this->wtlen_seas = wtlen_seas;
+        }
+
+
+
+
+
+
     };
 
 
 }
+
 
 
 #endif	/* STOCKSYNTHESISMODEL_HPP */
