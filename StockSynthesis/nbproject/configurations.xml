@@ -27,6 +27,8 @@
     </logicalFolder>
     <itemPath>DataModule.hpp</itemPath>
     <itemPath>Model.hpp</itemPath>
+    <itemPath>ModelFunctor.hpp</itemPath>
+    <itemPath>SS4/SS4.hpp</itemPath>
     <itemPath>StockSynthesisModel.hpp</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
