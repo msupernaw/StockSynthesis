@@ -9,14 +9,19 @@
 #define	MODELFUNCTOR_HPP
 
 
-//forward declaration for ModelBase.
-template<class REAL_T, class EVAL_T>
-class ss::ModelBase;
+////forward declaration for ModelBase.
+//template<class REAL_T, class EVAL_T>
+//class ss::ModelBase;
 
-
+#include "Model.hpp"
 
 
 namespace ss {
+    
+    
+    template<class REAL_T, class EVAL_T>
+    class ModelBase;
+    
 
     template<class REAL_T, class EVAL_T = REAL_T>
     class ModelFunctor {
@@ -24,7 +29,7 @@ namespace ss {
         ss::ModelBase<REAL_T, EVAL_T>* model_m;
     public:
 
-        ModelFunctor(ss::ModelBase<REAL_T, EVAL_T>* model) {
+        ModelFunctor(ss::ModelBase<REAL_T, EVAL_T>* model) : rank_m(0) {
 
         }
 
@@ -44,7 +49,9 @@ namespace ss {
             this->rank_m = rank;
         }
 
+        virtual void Evaluate() {
 
+        }
 
 
 

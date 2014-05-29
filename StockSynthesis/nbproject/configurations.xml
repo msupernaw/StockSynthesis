@@ -25,6 +25,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>test/CatchAtAge.hpp</itemPath>
     <itemPath>DataModule.hpp</itemPath>
     <itemPath>Model.hpp</itemPath>
     <itemPath>ModelFunctor.hpp</itemPath>

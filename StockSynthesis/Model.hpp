@@ -17,25 +17,45 @@ namespace ss {
 
     template<class REAL_T, class EVAL_T = REAL_T>
     class ModelBase {
-        DataModule<REAL_T>* data_m;
-        std::vector<ss::ModelFunctor<REAL_T, EVAL_T> > functors;
+        typedef std::vector<ss::ModelFunctor<REAL_T, EVAL_T> > Functors;
+        typedef typename std::vector<ss::ModelFunctor<REAL_T, EVAL_T> >::iterator FunctorsIterator;
+
+
+        ss::DataModule<REAL_T>* data_m;
+        Functors functors_m;
+        EVAL_T value;
 
     public:
 
-        DataModule<REAL_T>* GetData() const {
+        operator EVAL_T() const {
+            return this->Evaluate();
+        }
+
+        ss::DataModule<REAL_T>* GetData() const {
             return data_m;
         }
 
-        void SetData(DataModule<REAL_T>* data) {
+        void SetData(ss::DataModule<REAL_T>* data) {
             this->data_m = data;
         }
 
         void AddFunctor(ss::ModelFunctor<REAL_T, EVAL_T>* functor) {
+            this->functors_m.push_back(functor);
+        }
+
+        virtual const EVAL_T Evaluate() {
+            FunctorsIterator it;
+
+            for (it = functors_m.begin(); it != functors_m.end(); ++it) {
+                it->Evaluate();
+            }
+
+            return this->value;
 
         }
 
+    private:
 
-        virtual void Evaluate(EVAL_T &f) = 0;
 
 
     };
