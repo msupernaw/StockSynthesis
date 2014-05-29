@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
     ss::CatchAtAgeData<double> data;
 
-    ss::CatchAtAge<double, double> ca;
+    ss::CatchAtAgeModel<double, double> ca;
     ca.SetPhase(1);
     ca.SetData(data);
 

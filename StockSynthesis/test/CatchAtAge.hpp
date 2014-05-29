@@ -89,18 +89,19 @@ namespace ss {
     };
 
     template<class REAL_T, class EVAL_T>
-    class CatchAtAge;
+    class CatchAtAgeModel;
 
     template<class REAL_T, class EVAL_T>
     class CatchAtAgeFunctor {
     public:
-        virtual void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) = 0;
+        virtual void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) = 0;
+        virtual void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) = 0;
 
 
     };
 
     template<class REAL_T, class EVAL_T>
-    class CatchAtAge {
+    class CatchAtAgeModel {
         typedef std::vector<ss::CatchAtAgeFunctor<REAL_T, EVAL_T>* > Functors;
         typedef typename std::vector<ss::CatchAtAgeFunctor<REAL_T, EVAL_T>* >::iterator FunctorsIterator;
 
@@ -108,7 +109,7 @@ namespace ss {
         uint32_t max_phase;
         CatchAtAgeData<REAL_T> data;
         Functors functors_m;
-       
+
 
         //Runtime
         std::vector<EVAL_T> F;
@@ -123,19 +124,10 @@ namespace ss {
 
         std::vector<EVAL_T*> active_parameters;
         std::vector<std::pair<EVAL_T*, uint32_t> >parameters;
-        
-        
-         EVAL_T value;//models return variable.
-        
 
-        void AddParameter(EVAL_T* p, uint32_t phase) {
-            parameters.push_back(std::pair<EVAL_T*, uint32_t > (p, phase));
-        }
 
-        void AddParameter(const std::vector<EVAL_T> &p, uint32_t phase) {
-            for (int i = 0; i < p.size(); i++)
-                parameters.push_back(std::pair<EVAL_T*, uint32_t > (&p[i], phase));
-        }
+        EVAL_T value; //models return variable.
+
 
 
 
@@ -151,6 +143,17 @@ namespace ss {
 
         void AddFunctor(ss::CatchAtAgeFunctor<REAL_T, EVAL_T>* functor) {
             this->functors_m.push_back(functor);
+        }
+        
+        virtual const EVAL_T Initialize() {
+            FunctorsIterator it;
+
+            for (int i = 0; i < this->functors_m.size(); i++) {
+                this->functors_m[i]->Initialize(*this);
+            }
+
+            return this->value;
+
         }
 
         virtual const EVAL_T Evaluate() {
@@ -252,7 +255,14 @@ namespace ss {
             this->ratio_N = ratio_N;
         }
 
+        void AddParameter(EVAL_T &p, uint32_t phase = 1) {
+            parameters.push_back(std::pair<EVAL_T*, uint32_t > (&p, phase));
+        }
 
+        void AddParameter(std::vector<EVAL_T> &p, uint32_t phase = 1) {
+            for (int i = 0; i < p.size(); i++)
+                parameters.push_back(std::pair<EVAL_T*, uint32_t > (&p[i], phase));
+        }
 
 
 
@@ -265,7 +275,13 @@ namespace ss {
         std::vector<EVAL_T> log_sel_coff;
     public:
 
-        void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) {
+        void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
+            model.AddParameter(log_q);
+            model.AddParameter(log_sel);
+            model.AddParameter(log_sel_coff);
+        }
+
+        void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
 
             int i, j;
             // calculate the selectivity from the sel_coffs
@@ -322,7 +338,13 @@ namespace ss {
 
     public:
 
-        void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) {
+        void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
+            model.AddParameter(log_popscale);
+            model.AddParameter(log_relpop);
+            model.AddParameter(log_initpop);
+        }
+
+        void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
             int i, j;
             for (i = 0; i < log_initpop.size(); i++) {
                 log_initpop.at(i) = log_relpop.at(i) + log_popscale;
@@ -351,7 +373,11 @@ namespace ss {
     class CatchFunctor : public CatchAtAgeFunctor<REAL_T, EVAL_T> {
     public:
 
-        void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) {
+        void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
+
+        }
+
+        void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
             for (int i = 0; i < model.GetC().size(); i++) {
                 model.GetC().at(i) = (model.GetF().at(i) / model.GetZ().at(i))*(((REAL_T) 1.0 - model.GetS().at(i)) * model.GetN().at(i));
             }
@@ -362,7 +388,11 @@ namespace ss {
     class CostFunctor : public CatchAtAgeFunctor<REAL_T, EVAL_T> {
     public:
 
-        void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) {
+        void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
+
+        }
+
+        void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
 
 
             EVAL_T avg_F = (REAL_T) 0.0;
