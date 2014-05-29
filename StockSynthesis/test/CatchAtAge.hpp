@@ -107,18 +107,10 @@ namespace ss {
         uint32_t phase;
         uint32_t max_phase;
         CatchAtAgeData<REAL_T> data;
-
-        ss::DataModule<REAL_T>* data_m;
         Functors functors_m;
-        EVAL_T value;
+       
 
-
-
-
-        std::vector<EVAL_T> effort_devs;
         //Runtime
-
-
         std::vector<EVAL_T> F;
         std::vector<EVAL_T> Z;
         std::vector<EVAL_T> S;
@@ -126,10 +118,15 @@ namespace ss {
         std::vector<EVAL_T> C;
         std::vector<EVAL_T> predicted_N;
         std::vector<EVAL_T> ratio_N;
-        friend class CatchAtAgeFunctor<REAL_T, EVAL_T>;
+        std::vector<EVAL_T> effort_devs;
+
 
         std::vector<EVAL_T*> active_parameters;
         std::vector<std::pair<EVAL_T*, uint32_t> >parameters;
+        
+        
+         EVAL_T value;//models return variable.
+        
 
         void AddParameter(EVAL_T* p, uint32_t phase) {
             parameters.push_back(std::pair<EVAL_T*, uint32_t > (p, phase));
@@ -366,7 +363,7 @@ namespace ss {
     public:
 
         void Evaluate(CatchAtAge<REAL_T, EVAL_T> &model) {
-    
+
 
             EVAL_T avg_F = (REAL_T) 0.0;
             for (int i = 0; i < model.GetF().size(); i++) {
