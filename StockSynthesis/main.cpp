@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
     ca.SetPhase(1);
     ca.SetData(data);
 
+    
     ss::MortalityAndSurvivability<double, double> mortality;
     ca.AddFunctor(&mortality);
 
@@ -32,7 +33,8 @@ int main(int argc, char** argv) {
 
     ss::CostFunctor<double, double> cost;
     ca.AddFunctor(&cost);
-
+    
+    ca.Initialize();
     std::cout << ca.Evaluate();
     return 0;
 }

@@ -30,6 +30,7 @@ namespace ss {
         int nages;
         std::vector<REAL_T> obs_catch_at_age;
         std::vector<REAL_T> effort;
+        std::vector<REAL_T> survey;
         REAL_T M;
         std::vector<REAL_T> relwt;
 
@@ -86,6 +87,17 @@ namespace ss {
             this->relwt = relwt;
         }
 
+        std::vector<REAL_T> GetSurvey() const {
+            return survey;
+        }
+
+        void SetSurvey(std::vector<REAL_T> survey) {
+            this->survey = survey;
+        }
+
+
+
+
     };
 
     template<class REAL_T, class EVAL_T>
@@ -112,16 +124,19 @@ namespace ss {
 
 
         //Runtime
+
+
         std::vector<EVAL_T> F;
         std::vector<EVAL_T> Z;
         std::vector<EVAL_T> S;
         std::vector<EVAL_T> N;
         std::vector<EVAL_T> C;
+        std::vector<EVAL_T> Selectivity;
         std::vector<EVAL_T> predicted_N;
         std::vector<EVAL_T> ratio_N;
         std::vector<EVAL_T> effort_devs;
-
-
+        std::vector<EVAL_T> Abundance;
+        std::vector<EVAL_T> Sample;
         std::vector<EVAL_T*> active_parameters;
         std::vector<std::pair<EVAL_T*, uint32_t> >parameters;
 
@@ -137,6 +152,14 @@ namespace ss {
             return this->Evaluate();
         }
 
+        std::vector<EVAL_T> GetAbundance() const {
+            return Abundance;
+        }
+
+        void SetAbundance(std::vector<EVAL_T> Abundance) {
+            this->Abundance = Abundance;
+        }
+
         REAL_T& GetValue() {
             return value;
         }
@@ -144,7 +167,7 @@ namespace ss {
         void AddFunctor(ss::CatchAtAgeFunctor<REAL_T, EVAL_T>* functor) {
             this->functors_m.push_back(functor);
         }
-        
+
         virtual const EVAL_T Initialize() {
             FunctorsIterator it;
 
@@ -264,6 +287,23 @@ namespace ss {
                 parameters.push_back(std::pair<EVAL_T*, uint32_t > (&p[i], phase));
         }
 
+        std::vector<EVAL_T> GetSelectivity() const {
+            return Selectivity;
+        }
+
+        void SetSelectivity(std::vector<EVAL_T> Selectivity) {
+            this->Selectivity = Selectivity;
+        }
+
+        std::vector<EVAL_T> GetSample() const {
+            return Sample;
+        }
+
+        void SetSample(std::vector<EVAL_T> Sample) {
+            this->Sample = Sample;
+        }
+
+
 
 
     };
@@ -273,6 +313,11 @@ namespace ss {
         EVAL_T log_q;
         std::vector<EVAL_T> log_sel;
         std::vector<EVAL_T> log_sel_coff;
+
+        //runtime
+
+
+
     public:
 
         void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
@@ -287,22 +332,26 @@ namespace ss {
             // calculate the selectivity from the sel_coffs
             for (j = 0; j < model.GetData().GetNages() - 1; j++) {
                 log_sel.at(j) = log_sel_coff.at(j);
+                model.GetSelectivity().at(j) = std::exp(log_sel.at(j));
 
             }
 
             if (model.GetData().GetNages() > 0) {
                 // the selectivity is the same for the last two age classes
                 log_sel.at(model.GetData().GetNages() - 1) = log_sel_coff.at(model.GetData().GetNages() - 2);
+                model.GetSelectivity().at(model.GetData().GetNages() - 1) = std::exp(log_sel.at(model.GetData().GetNages() - 2));
             }
 
-            // This is the same as F(i,j)=exp(q)*effert(i)*exp(log_sel(j));
-            //F = outer_prod(mfexp(log_q) * effort, mfexp(log_sel));
             for (i = 0; i < model.GetData().GetNyrs(); i++) {
                 for (j = 0; j < model.GetData().GetNages(); j++) {
+
+                    model.GetAbundance().at(i * model.GetData().GetNages() + j)
+                            = model.GetN().at(i * model.GetData().GetNages() + j) * log_sel.at(i);
+
+
                     model.GetF().at(i * model.GetData().GetNages() + j)
                             = (std::exp(log_q) * model.GetEffort_devs().at(i)) * exp(log_sel.at(j));
-                    //                std::cout<<F[i * nages + j]<<" "<<F[i * nages + j].wrt(this->log_q)<<"\n";
-                    //                exit(0);
+
                 }
             }
 
@@ -314,9 +363,8 @@ namespace ss {
                     }
                 }
             }
-            //            
-            //            
-            //                        // get the total mortality
+
+            // get the total mortality
             for (i = 0; i < model.GetData().GetNyrs(); i++) {
                 for (j = 0; j < model.GetData().GetNages(); j++) {
                     model.GetZ().at(i * model.GetData().GetNages() + j) =
@@ -327,6 +375,33 @@ namespace ss {
 
             }
         }
+
+        EVAL_T GetLog_q() const {
+            return log_q;
+        }
+
+        void SetLog_q(EVAL_T log_q) {
+            this->log_q = log_q;
+        }
+
+        std::vector<EVAL_T> GetLog_sel() const {
+            return log_sel;
+        }
+
+        void SetLog_sel(std::vector<EVAL_T> log_sel) {
+            this->log_sel = log_sel;
+        }
+
+        std::vector<EVAL_T> GetLog_sel_coff() const {
+            return log_sel_coff;
+        }
+
+        void SetLog_sel_coff(std::vector<EVAL_T> log_sel_coff) {
+            this->log_sel_coff = log_sel_coff;
+        }
+
+
+
 
     };
 
@@ -351,6 +426,7 @@ namespace ss {
             }
 
             for (i = 0; i < model.GetData().GetNyrs(); i++) {
+
                 model.GetN().at(i * model.GetData().GetNages()) = std::exp(log_initpop.at(i));
             }
 
@@ -367,21 +443,64 @@ namespace ss {
 
             model.GetValue() += (REAL_T) .01 * norm2<EVAL_T > (log_relpop);
         }
+
+        std::vector<EVAL_T> GetLog_initpop() const {
+            return log_initpop;
+        }
+
+        void SetLog_initpop(std::vector<EVAL_T> log_initpop) {
+            this->log_initpop = log_initpop;
+        }
+
+        EVAL_T GetLog_popscale() const {
+            return log_popscale;
+        }
+
+        void SetLog_popscale(EVAL_T log_popscale) {
+            this->log_popscale = log_popscale;
+        }
+
+        std::vector<EVAL_T> GetLog_relpop() const {
+            return log_relpop;
+        }
+
+        void SetLog_relpop(std::vector<EVAL_T> log_relpop) {
+            this->log_relpop = log_relpop;
+        }
+
+
+
     };
 
     template<class REAL_T, class EVAL_T>
     class CatchFunctor : public CatchAtAgeFunctor<REAL_T, EVAL_T> {
+        EVAL_T q_survey;
     public:
 
         void Initialize(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
-
+            model.AddParameter(q_survey);
         }
 
         void Evaluate(CatchAtAgeModel<REAL_T, EVAL_T> &model) {
             for (int i = 0; i < model.GetC().size(); i++) {
                 model.GetC().at(i) = (model.GetF().at(i) / model.GetZ().at(i))*(((REAL_T) 1.0 - model.GetS().at(i)) * model.GetN().at(i));
+                model.GetSample().at(i) = (model.GetSelectivity().at(i) * model.GetN().at(i));
+                model.GetAbundance().at(i) = q_survey * model.GetSample().at(i);
             }
         }
+
+        EVAL_T GetQ_survey() const {
+            return q_survey;
+        }
+
+        void SetQ_survey(EVAL_T q_survey) {
+            this->q_survey = q_survey;
+        }
+
+
+
+
+
     };
 
     template<class REAL_T, class EVAL_T>
@@ -396,11 +515,12 @@ namespace ss {
 
 
             EVAL_T avg_F = (REAL_T) 0.0;
+
             for (int i = 0; i < model.GetF().size(); i++) {
                 avg_F += model.GetF().at(i);
             }
-            avg_F /= (REAL_T) model.GetF().size();
 
+            avg_F /= (REAL_T) model.GetF().size();
             if (model.Phase() == model.MaxPhase()) {
 
                 // a very small penalty on the average fishing mortality
@@ -413,7 +533,6 @@ namespace ss {
             for (int i = 0; i < model.GetC().size(); i++) {
                 sum += ((model.GetC().at(i) - model.GetData().GetObs_catch_at_age().at(i))*
                         (model.GetC().at(i) - model.GetData().GetObs_catch_at_age().at(i))) / ((REAL_T) 0.01 + model.GetC().at(i));
-                //            std::cout << this->log_q << ":" << this->log_popscale << " " << f << "---" << sum.wrt(this->log_q) << "\n";
             }
 
             model.GetValue() += (REAL_T) 0.5 * REAL_T(model.GetC().size() + model.GetEffort_devs().size()) * std::log(sum + (REAL_T) 0.1 * norm2<EVAL_T > (model.GetEffort_devs()));
@@ -426,6 +545,9 @@ namespace ss {
 
 
 }
+
+
+
 
 
 
